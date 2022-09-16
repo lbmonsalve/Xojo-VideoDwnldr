@@ -202,12 +202,87 @@ Begin ContainerControl DownloadPanel
       Visible         =   True
       Width           =   90
    End
+   Begin Timer Timer1
+      Height          =   32
+      Index           =   -2147483648
+      Left            =   -30
+      LockedInPosition=   False
+      Mode            =   0
+      Period          =   3000
+      Scope           =   0
+      TabPanelIndex   =   0
+      Top             =   -30
+      Width           =   32
+   End
+   Begin Label Label1
+      AutoDeactivate  =   True
+      Bold            =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   28
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   20
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   False
+      Multiline       =   True
+      Scope           =   0
+      Selectable      =   True
+      TabIndex        =   4
+      TabPanelIndex   =   0
+      Text            =   ""
+      TextAlign       =   0
+      TextColor       =   &h000000
+      TextFont        =   "System"
+      TextSize        =   16
+      TextUnit        =   0
+      Top             =   250
+      Transparent     =   False
+      Underline       =   ""
+      Visible         =   True
+      Width           =   258
+   End
 End
 #tag EndWindow
 
 #tag WindowCode
+	#tag Method, Flags = &h21
+		Private Sub ShellDataAvailable(o As Shell)
+		  Dim result As String= ReplaceLineEndings(ConvertEncoding(o.ReadAll, Encodings.UTF8), EndOfLine.Windows)
+		  Dim results() As String= result.Split(EndOfLine.Windows)
+		  
+		  While results(0).Len= 0
+		    results.Remove 0
+		  Wend
+		  
+		  Dim data As String= results(0)
+		  Dim pos As Integer= data.InStr("estination:")
+		  If pos> 0 Then
+		    Label1.Text= data.Mid(pos+ 12)
+		    Return
+		  End If
+		  
+		  pos= data.InStr("[download]")
+		  If pos> 0 Then
+		    data= data.Mid(pos+ 10)
+		    System.DebugLog CurrentMethodName+ " data: ("+ data+ ")"
+		  End If
+		End Sub
+	#tag EndMethod
+
+
 	#tag Property, Flags = &h0
 		FfmpegFile As FolderItem
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mCmds() As Shell
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -229,7 +304,7 @@ End
 		  Dim cmd As String= YoutubeDlFile.ShellPath+ " -F "+ TextField1.Text
 		  
 		  Dim ss As New Shell
-		  ss.TimeOut= 5000
+		  ss.TimeOut= 10000
 		  ss.Execute cmd
 		  
 		  If ss.ErrorCode= 0 Then
@@ -273,7 +348,50 @@ End
 		    Return
 		  End If
 		  
-		  MsgBox "format: "+ Listbox1.RowTag(Listbox1.ListIndex).StringValue
+		  Dim cmd As String= YoutubeDlFile.ShellPath+ _
+		  " -f "+ Listbox1.RowTag(Listbox1.ListIndex).StringValue+ _
+		  " --ffmpeg-location "+ FfmpegFile.ShellPath+ _
+		  " -o """+ SpecialFolder.Movies.ShellPath+ "\%(title)s-%(id)s.%(ext)s"""+ _
+		  " "+ TextField1.Text
+		  
+		  Dim ss As New Shell
+		  AddHandler ss.DataAvailable, WeakAddressOf ShellDataAvailable
+		  ss.Mode= 1 // Async
+		  ss.Execute cmd
+		  
+		  mCmds.Append ss
+		  
+		  If Timer1.Mode= Timer.ModeOff Then
+		    Timer1.Mode= Timer1.ModeMultiple
+		    Timer1.Enabled= True
+		  End If
+		  
+		  System.DebugLog CurrentMethodName+ " "+ cmd
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events Timer1
+	#tag Event
+		Sub Action()
+		  Dim idxs() As Integer
+		  
+		  For i As Integer= 0 To mCmds.Ubound
+		    Dim ss As Shell= mCmds(i)
+		    If Not ss.IsRunning Then
+		      RemoveHandler ss.DataAvailable, WeakAddressOf ShellDataAvailable
+		      idxs.Append i
+		    End If
+		  Next
+		  
+		  For Each idx As Integer In idxs
+		    mCmds.Remove idx
+		    System.DebugLog CurrentMethodName+ " mCmds.Remove "+ Str(idx)
+		  Next
+		  
+		  If mCmds.Ubound= -1 Then
+		    Me.Mode= Timer.ModeOff
+		    System.DebugLog CurrentMethodName+ " Me.Mode= Timer.ModeOff"
+		  End If
 		End Sub
 	#tag EndEvent
 #tag EndEvents
