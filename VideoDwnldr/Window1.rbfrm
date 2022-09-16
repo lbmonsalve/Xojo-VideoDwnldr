@@ -1,0 +1,60 @@
+#tag Window
+Begin Window Window1
+   BackColor       =   &hFFFFFF
+   Backdrop        =   ""
+   CloseButton     =   True
+   Composite       =   False
+   Frame           =   0
+   FullScreen      =   False
+   HasBackColor    =   False
+   Height          =   400
+   ImplicitInstance=   True
+   LiveResize      =   True
+   MacProcID       =   0
+   MaxHeight       =   32000
+   MaximizeButton  =   True
+   MaxWidth        =   32000
+   MenuBar         =   625008639
+   MenuBarVisible  =   True
+   MinHeight       =   64
+   MinimizeButton  =   True
+   MinWidth        =   64
+   Placement       =   0
+   Resizeable      =   True
+   Title           =   "Video downloader"
+   Visible         =   True
+   Width           =   600
+   Begin MainPanel MainPanel1
+      AcceptFocus     =   True
+      AcceptTabs      =   True
+      AutoDeactivate  =   True
+      BackColor       =   &hFFFFFF
+      Backdrop        =   ""
+      BrandName       =   "VideoDwnldr"
+      Enabled         =   True
+      EraseBackground =   True
+      HasBackColor    =   False
+      Height          =   400
+      HelpTag         =   ""
+      InitialParent   =   ""
+      Left            =   0
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   True
+      Scope           =   0
+      TabIndex        =   0
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Top             =   0
+      UseFocusRing    =   ""
+      Visible         =   True
+      Width           =   600
+   End
+End
+#tag EndWindow
+
+#tag WindowCode
+#tag EndWindowCode
+
