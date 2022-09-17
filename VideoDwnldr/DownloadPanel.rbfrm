@@ -263,6 +263,7 @@ End
 		  If o.Idx= -1 Then Return
 		  
 		  Dim result As String= ReplaceLineEndings(ConvertEncoding(o.ReadAll, Encodings.UTF8), EndOfLine.Windows)
+		  'System.DebugLog CurrentMethodName+ " result: "+ result
 		  Dim results() As String= result.Split(EndOfLine.Windows)
 		  
 		  While results(0).Len= 0
@@ -270,7 +271,22 @@ End
 		  Wend
 		  
 		  Dim data As String= results(0)
-		  Dim pos As Integer= data.InStr("estination:")
+		  Dim pos As Integer
+		  
+		  //[3352] DownloadPanel.CmdDataAvailable result: [download] C:\Users\Usuario\DOWNLO~1\16 de septiembre de 2022-7hB9N24nqEU.mp4 has already been downloaded
+		  //[2020] [download] C:\Users\Usuario\DOWNLO~1\16 de septiembre de 2022-best-7hB9N24nqEU.mkv has already been downloaded and merged
+		  
+		  // already downloaded:
+		  pos= data.InStr("has already been downloaded")
+		  If pos> 0 Then
+		    data= data.Mid(12, pos- 12).Trim
+		    PanelHistory.Listbox1.Cell(o.Idx, 0)= data
+		    'System.DebugLog CurrentMethodName+ " data: ("+ data+ ")"
+		    Return
+		  End If
+		  
+		  // destination
+		  pos= data.InStr("estination:")
 		  If pos> 0 Then
 		    data= data.Mid(pos+ 12).Trim
 		    Try
@@ -282,6 +298,7 @@ End
 		    Return
 		  End If
 		  
+		  // downloading:
 		  pos= data.InStr("[download]")
 		  If pos> 0 Then
 		    data= data.Mid(pos+ 10).Trim
@@ -302,6 +319,10 @@ End
 
 	#tag Property, Flags = &h0
 		PanelHistory As HistoryPanel
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		VideosFolder As FolderItem
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -370,17 +391,18 @@ End
 		      Return
 		    End If
 		    fmtSel= Listbox1.RowTag(Listbox1.ListIndex).StringValue
-		    fmtOut= """"+ SpecialFolder.Movies.ShellPath+ "\%(title)s-%(id)s.%(ext)s"""
+		    fmtOut= """"+ VideosFolder.ShellPath+ "\%(title)s-%(id)s.%(ext)s"""
 		  ElseIf ComboBox1.Text= "MenorCalidad" Then
 		    fmtSel= "worstvideo+worstaudio"
-		    fmtOut= """"+ SpecialFolder.Movies.ShellPath+ "\%(title)s-worst-%(id)s.%(ext)s"""
+		    fmtOut= """"+ VideosFolder.ShellPath+ "\%(title)s-worst-%(id)s.%(ext)s"""
 		  ElseIf ComboBox1.Text= "MejorCalidad" Then
 		    fmtSel= "bestvideo+bestaudio"
-		    fmtOut= """"+ SpecialFolder.Movies.ShellPath+ "\%(title)s-best-%(id)s.%(ext)s"""
+		    fmtOut= """"+ VideosFolder.ShellPath+ "\%(title)s-best-%(id)s.%(ext)s"""
 		  End If
 		  
 		  PanelHistory.Listbox1.AddRow "Iniciando..."
 		  Dim idx As Integer= PanelHistory.Listbox1.LastIndex
+		  PanelHistory.Listbox1.RowTag(idx)= VideosFolder
 		  
 		  Dim cmd As String= YoutubeDlFile.ShellPath+ _
 		  " -f "+ fmtSel+ _

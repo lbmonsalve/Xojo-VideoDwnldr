@@ -18,6 +18,19 @@ Protected Module ExtendsLBM
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Sub Save(Extends json As JSONData, ff As FolderItem)
+		  If ff Is Nil Then Return
+		  If ff.Directory Then Return
+		  
+		  json.Compact= False
+		  
+		  Dim tos As TextOutputStream= TextOutputStream.Create(ff)
+		  tos.Write json.ToString
+		  tos.Close
+		End Sub
+	#tag EndMethod
+
 
 	#tag ViewBehavior
 		#tag ViewProperty

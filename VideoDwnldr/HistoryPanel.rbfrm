@@ -91,7 +91,7 @@ Begin ContainerControl HistoryPanel
       LockTop         =   False
       Multiline       =   ""
       Scope           =   0
-      Selectable      =   True
+      Selectable      =   False
       TabIndex        =   1
       TabPanelIndex   =   0
       Text            =   ""
@@ -119,5 +119,22 @@ End
 		    Label1.Text= Me.Cell(row, 0)
 		  End If
 		End Function
+	#tag EndEvent
+#tag EndEvents
+#tag Events Label1
+	#tag Event
+		Function MouseDown(X As Integer, Y As Integer) As Boolean
+		  If Me.Text.Len> 0 Then Return True Else Return False
+		End Function
+	#tag EndEvent
+	#tag Event
+		Sub MouseUp(X As Integer, Y As Integer)
+		  If Not (x< 0 Or y< 0 Or x> Me.Width Or y> Me.Height) Then
+		    If Listbox1.ListIndex<> -1 Then
+		      Dim folder As FolderItem= Listbox1.RowTag(Listbox1.ListIndex)
+		      If folder.Directory Then folder.Launch
+		    End If
+		  End If
+		End Sub
 	#tag EndEvent
 #tag EndEvents

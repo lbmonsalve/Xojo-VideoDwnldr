@@ -50,7 +50,7 @@ Begin ContainerControl MainPanel
       TextUnit        =   0
       Top             =   0
       Underline       =   ""
-      Value           =   0
+      Value           =   2
       Visible         =   True
       Width           =   600
       Begin DownloadPanel DownloadPanel1
@@ -107,6 +107,33 @@ Begin ContainerControl MainPanel
          Visible         =   True
          Width           =   598
       End
+      Begin ConfigPanel ConfigPanel1
+         AcceptFocus     =   True
+         AcceptTabs      =   True
+         AutoDeactivate  =   True
+         BackColor       =   &hFFFFFF
+         Backdrop        =   ""
+         Enabled         =   True
+         EraseBackground =   True
+         HasBackColor    =   False
+         Height          =   350
+         HelpTag         =   ""
+         InitialParent   =   "TabPanel1"
+         Left            =   0
+         LockBottom      =   True
+         LockedInPosition=   False
+         LockLeft        =   True
+         LockRight       =   True
+         LockTop         =   True
+         Scope           =   0
+         TabIndex        =   0
+         TabPanelIndex   =   3
+         TabStop         =   True
+         Top             =   50
+         UseFocusRing    =   ""
+         Visible         =   True
+         Width           =   598
+      End
    End
    Begin Timer Timer1
       Height          =   32
@@ -138,17 +165,30 @@ End
 		  YoutubeDlFile= folderYoutubeDl.Child("youtube-dl.exe")
 		  FfmpegFile= folderFfmpeg.Child("ffmpeg.exe")
 		  
+		  Dim json As JSONData= PreferencesFile.OpenAsJSONData
+		  
+		  // set downloadPanel:
 		  DownloadPanel1.PanelHistory= HistoryPanel1
 		  DownloadPanel1.YoutubeDlFile= YoutubeDlFile
 		  DownloadPanel1.FfmpegFile= FfmpegFile
+		  DownloadPanel1.VideosFolder= New FolderItem(json.Value(kVideos_folder).StringValue, FolderItem.PathTypeShell)
+		  
+		  // set configPanel:
+		  If True Then
+		    Dim names() As String= json.Names
+		    For Each name As String In names
+		      If Not json.Value(name) IsA JSONData Then
+		        ConfigPanel1.Listbox1.AddRow name, json.Value(name).StringValue
+		      End If
+		    Next
+		    ConfigPanel1.PreferencesFile= PreferencesFile
+		  End If
 		  
 		  If YoutubeDlFile.Exists And FfmpegFile.Exists Then
 		    DownloadPanel1.Enabled= True
 		    DownloadPanel1.BevelButton1.SetFocus
 		    Return
 		  End If
-		  
-		  Dim json As JSONData= PreferencesFile.OpenAsJSONData
 		  
 		  If Not YoutubeDlFile.Exists Then
 		    Dim dfy As New DownloadFile
@@ -157,10 +197,10 @@ End
 		    dfy.TmpFile= GetTemporaryFolderItem
 		    dfy.TmpBs= BinaryStream.Create(dfy.TmpFile, True)
 		    dfy.FinalFolderItem= YoutubeDlFile
-		    dfy.Get json.Value("url_youtube_dl").StringValue, dfy.TmpBs
+		    dfy.Get json.Value(kUrl_youtube_dl).StringValue, dfy.TmpBs
 		    DownloadFiles.Append dfy
 		    
-		    HistoryPanel1.Listbox1.AddRow json.Value("url_youtube_dl").StringValue
+		    HistoryPanel1.Listbox1.AddRow json.Value(kUrl_youtube_dl).StringValue
 		    dfy.Idx= HistoryPanel1.Listbox1.LastIndex
 		    dfy.IsRunning= True
 		  End If
@@ -172,10 +212,10 @@ End
 		    dff.TmpFile= GetTemporaryFolderItem
 		    dff.TmpBs= BinaryStream.Create(dff.TmpFile, True)
 		    dff.FinalFolderItem= folderFfmpeg
-		    dff.Get json.Value("url_ffmpeg").StringValue, dff.TmpBs
+		    dff.Get json.Value(kUrl_ffmpeg).StringValue, dff.TmpBs
 		    DownloadFiles.Append dff
 		    
-		    HistoryPanel1.Listbox1.AddRow json.Value("url_ffmpeg").StringValue
+		    HistoryPanel1.Listbox1.AddRow json.Value(kUrl_ffmpeg).StringValue
 		    dff.Idx= HistoryPanel1.Listbox1.LastIndex
 		    dff.IsRunning= True
 		  End If
@@ -195,9 +235,9 @@ End
 		  Dim json As New JSONData
 		  json.Compact= False
 		  
-		  json.Value("url_youtube_dl")= "https://www.dropbox.com/s/ibq3eq8cy2hp584/youtube-dl.exe?dl=1"
-		  json.Value("url_ffmpeg")= "https://www.dropbox.com/s/ue2z3b7q7372mgs/ffmpeg-win-2.2.2.zip?dl=1"
-		  json.Value("videos_folder")= SpecialFolder.Movies.AbsoluteNativePath
+		  json.Value(kUrl_youtube_dl)= "https://www.dropbox.com/s/ibq3eq8cy2hp584/youtube-dl.exe?dl=1"
+		  json.Value(kUrl_ffmpeg)= "https://www.dropbox.com/s/ue2z3b7q7372mgs/ffmpeg-win-2.2.2.zip?dl=1"
+		  json.Value(kVideos_folder)= SpecialFolder.Movies.AbsoluteNativePath
 		  
 		  Dim tos As TextOutputStream= TextOutputStream.Create(f)
 		  tos.Write json.ToString
@@ -308,6 +348,15 @@ End
 
 
 	#tag Constant, Name = kFfmpeg, Type = String, Dynamic = False, Default = \"ffmpeg", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = kUrl_ffmpeg, Type = String, Dynamic = False, Default = \"url_ffmpeg", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = kUrl_youtube_dl, Type = String, Dynamic = False, Default = \"url_youtube_dl", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = kVideos_folder, Type = String, Dynamic = False, Default = \"videos_folder", Scope = Public
 	#tag EndConstant
 
 	#tag Constant, Name = kYoutubedl, Type = String, Dynamic = False, Default = \"youtube-dl", Scope = Private
