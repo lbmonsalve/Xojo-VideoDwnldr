@@ -3,9 +3,13 @@
 //
 // to change:
 Dim tagsToChange() As Pair
+tagsToChange.Append New Pair(";zlib/", ";../../Xojo-zlib/zlib/")
+tagsToChange.Append New Pair(";PKZip/", ";../../Xojo-zlib/PKZip/")
 tagsToChange.Append New Pair(";libcURL/", ";../../Xojo-libcURL/libcURL/")
 
 Dim foldersToMove() As Pair
+foldersToMove.Append New Pair("zlib", "../../Xojo-zlib/")
+foldersToMove.Append New Pair("PKZip", "../../Xojo-zlib/")
 foldersToMove.Append New Pair("libcURL", "../../Xojo-libcURL/")
 
 

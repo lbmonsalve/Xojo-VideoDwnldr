@@ -253,7 +253,17 @@ End
 
 #tag WindowCode
 	#tag Method, Flags = &h21
-		Private Sub ShellDataAvailable(o As Shell)
+		Private Sub CmdCompleted(o As Cmd)
+		  If o.Idx= -1 Then Return
+		  
+		  PanelHistory.Listbox1.Cell(o.Idx, 1)= "Completado!"
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub CmdDataAvailable(o As Cmd)
+		  If o.Idx= -1 Then Return
+		  
 		  Dim result As String= ReplaceLineEndings(ConvertEncoding(o.ReadAll, Encodings.UTF8), EndOfLine.Windows)
 		  Dim results() As String= result.Split(EndOfLine.Windows)
 		  
@@ -264,14 +274,22 @@ End
 		  Dim data As String= results(0)
 		  Dim pos As Integer= data.InStr("estination:")
 		  If pos> 0 Then
-		    Label1.Text= data.Mid(pos+ 12)
+		    data= data.Mid(pos+ 12).Trim
+		    Label1.Text= data
+		    Try
+		      Dim file As New FolderItem(data)
+		      PanelHistory.Listbox1.Cell(o.Idx, 0)= file.DisplayName
+		    Catch e As RuntimeException
+		      System.DebugLog CurrentMethodName+ " e.Message: "+ e.Message
+		    End Try
 		    Return
 		  End If
 		  
 		  pos= data.InStr("[download]")
 		  If pos> 0 Then
-		    data= data.Mid(pos+ 10)
-		    System.DebugLog CurrentMethodName+ " data: ("+ data+ ")"
+		    data= data.Mid(pos+ 10).Trim
+		    PanelHistory.Listbox1.Cell(o.Idx, 1)= data
+		    'System.DebugLog CurrentMethodName+ " data: ("+ data+ ")"
 		  End If
 		End Sub
 	#tag EndMethod
@@ -282,7 +300,11 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private mCmds() As Shell
+		Private mCmds() As Cmd
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		PanelHistory As HistoryPanel
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -348,15 +370,20 @@ End
 		    Return
 		  End If
 		  
+		  PanelHistory.Listbox1.AddRow "Iniciando..."
+		  Dim idx As Integer= PanelHistory.Listbox1.LastIndex
+		  
 		  Dim cmd As String= YoutubeDlFile.ShellPath+ _
 		  " -f "+ Listbox1.RowTag(Listbox1.ListIndex).StringValue+ _
 		  " --ffmpeg-location "+ FfmpegFile.ShellPath+ _
 		  " -o """+ SpecialFolder.Movies.ShellPath+ "\%(title)s-%(id)s.%(ext)s"""+ _
 		  " "+ TextField1.Text
 		  
-		  Dim ss As New Shell
-		  AddHandler ss.DataAvailable, WeakAddressOf ShellDataAvailable
+		  Dim ss As New Cmd
+		  AddHandler ss.DataAvailable, WeakAddressOf CmdDataAvailable
+		  AddHandler ss.Completed, WeakAddressOf CmdCompleted
 		  ss.Mode= 1 // Async
+		  ss.Idx= idx
 		  ss.Execute cmd
 		  
 		  mCmds.Append ss
@@ -366,7 +393,7 @@ End
 		    Timer1.Enabled= True
 		  End If
 		  
-		  System.DebugLog CurrentMethodName+ " "+ cmd
+		  'System.DebugLog CurrentMethodName+ " "+ cmd
 		End Sub
 	#tag EndEvent
 #tag EndEvents
@@ -376,21 +403,22 @@ End
 		  Dim idxs() As Integer
 		  
 		  For i As Integer= 0 To mCmds.Ubound
-		    Dim ss As Shell= mCmds(i)
+		    Dim ss As Cmd= mCmds(i)
 		    If Not ss.IsRunning Then
-		      RemoveHandler ss.DataAvailable, WeakAddressOf ShellDataAvailable
+		      RemoveHandler ss.DataAvailable, WeakAddressOf CmdDataAvailable
+		      RemoveHandler ss.Completed, WeakAddressOf CmdCompleted
 		      idxs.Append i
 		    End If
 		  Next
 		  
 		  For Each idx As Integer In idxs
 		    mCmds.Remove idx
-		    System.DebugLog CurrentMethodName+ " mCmds.Remove "+ Str(idx)
+		    'System.DebugLog CurrentMethodName+ " mCmds.Remove "+ Str(idx)
 		  Next
 		  
 		  If mCmds.Ubound= -1 Then
 		    Me.Mode= Timer.ModeOff
-		    System.DebugLog CurrentMethodName+ " Me.Mode= Timer.ModeOff"
+		    'System.DebugLog CurrentMethodName+ " Me.Mode= Timer.ModeOff"
 		  End If
 		End Sub
 	#tag EndEvent

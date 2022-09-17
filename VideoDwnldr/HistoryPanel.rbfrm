@@ -29,8 +29,8 @@ Begin ContainerControl HistoryPanel
       Bold            =   ""
       Border          =   True
       ColumnCount     =   2
-      ColumnsResizable=   ""
-      ColumnWidths    =   ""
+      ColumnsResizable=   True
+      ColumnWidths    =   "*,*"
       DataField       =   ""
       DataSource      =   ""
       DefaultRowHeight=   -1
@@ -56,7 +56,7 @@ Begin ContainerControl HistoryPanel
       LockTop         =   True
       RequiresSelection=   ""
       Scope           =   0
-      ScrollbarHorizontal=   ""
+      ScrollbarHorizontal=   True
       ScrollBarVertical=   True
       SelectionType   =   0
       TabIndex        =   0
