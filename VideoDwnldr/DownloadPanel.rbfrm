@@ -322,6 +322,10 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
+		PanelMain As MainPanel
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
 		VideosFolder As FolderItem
 	#tag EndProperty
 
@@ -368,6 +372,8 @@ End
 		      Listbox1.AddRow exte, reso, note
 		      Listbox1.RowTag(Listbox1.LastIndex)= code
 		    Next
+		  ElseIf ss.ErrorCode< -1 Then // download vcredist:
+		    PanelMain.DownloadVcredist
 		  Else
 		    MsgBox "error! code:"+Str( ss.ErrorCode)
 		  End If

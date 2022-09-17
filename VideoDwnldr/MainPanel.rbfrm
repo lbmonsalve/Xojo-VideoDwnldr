@@ -50,7 +50,7 @@ Begin ContainerControl MainPanel
       TextUnit        =   0
       Top             =   0
       Underline       =   ""
-      Value           =   2
+      Value           =   0
       Visible         =   True
       Width           =   600
       Begin DownloadPanel DownloadPanel1
@@ -62,7 +62,7 @@ Begin ContainerControl MainPanel
          Enabled         =   False
          EraseBackground =   True
          HasBackColor    =   False
-         Height          =   350
+         Height          =   360
          HelpTag         =   ""
          InitialParent   =   "TabPanel1"
          Left            =   0
@@ -75,7 +75,7 @@ Begin ContainerControl MainPanel
          TabIndex        =   0
          TabPanelIndex   =   1
          TabStop         =   True
-         Top             =   50
+         Top             =   40
          UseFocusRing    =   ""
          Visible         =   True
          Width           =   598
@@ -89,7 +89,7 @@ Begin ContainerControl MainPanel
          Enabled         =   True
          EraseBackground =   True
          HasBackColor    =   False
-         Height          =   350
+         Height          =   360
          HelpTag         =   ""
          InitialParent   =   "TabPanel1"
          Left            =   0
@@ -102,7 +102,7 @@ Begin ContainerControl MainPanel
          TabIndex        =   0
          TabPanelIndex   =   2
          TabStop         =   True
-         Top             =   50
+         Top             =   40
          UseFocusRing    =   ""
          Visible         =   True
          Width           =   598
@@ -116,7 +116,7 @@ Begin ContainerControl MainPanel
          Enabled         =   True
          EraseBackground =   True
          HasBackColor    =   False
-         Height          =   350
+         Height          =   362
          HelpTag         =   ""
          InitialParent   =   "TabPanel1"
          Left            =   0
@@ -129,7 +129,7 @@ Begin ContainerControl MainPanel
          TabIndex        =   0
          TabPanelIndex   =   3
          TabStop         =   True
-         Top             =   50
+         Top             =   38
          UseFocusRing    =   ""
          Visible         =   True
          Width           =   598
@@ -168,6 +168,7 @@ End
 		  Dim json As JSONData= PreferencesFile.OpenAsJSONData
 		  
 		  // set downloadPanel:
+		  DownloadPanel1.PanelMain= Self
 		  DownloadPanel1.PanelHistory= HistoryPanel1
 		  DownloadPanel1.YoutubeDlFile= YoutubeDlFile
 		  DownloadPanel1.FfmpegFile= FfmpegFile
@@ -194,6 +195,7 @@ End
 		    Dim dfy As New DownloadFile
 		    AddHandler dfy.Progress, WeakAddressOf dfProgress
 		    AddHandler dfy.TransferComplete, WeakAddressOf dfTransferComplete
+		    dfy.DownloadType= DownloadFile.TypeDownload.Youtube_dl
 		    dfy.TmpFile= GetTemporaryFolderItem
 		    dfy.TmpBs= BinaryStream.Create(dfy.TmpFile, True)
 		    dfy.FinalFolderItem= YoutubeDlFile
@@ -209,6 +211,7 @@ End
 		    Dim dff As New DownloadFile
 		    AddHandler dff.Progress, WeakAddressOf dfProgress
 		    AddHandler dff.TransferComplete, WeakAddressOf dfTransferComplete
+		    dff.DownloadType= DownloadFile.TypeDownload.Ffmpeg
 		    dff.TmpFile= GetTemporaryFolderItem
 		    dff.TmpBs= BinaryStream.Create(dff.TmpFile, True)
 		    dff.FinalFolderItem= folderFfmpeg
@@ -261,10 +264,9 @@ End
 		Private Sub dfTransferComplete(o As DownloadFile, BytesRead As Integer, BytesWritten As Integer)
 		  'System.DebugLog CurrentMethodName+ " "+ o.TmpFile.AbsoluteNativePath
 		  
-		  If o.FinalFolderItem.DisplayName.InStr("outube")> 0 Then
+		  If o.DownloadType= DownloadFile.TypeDownload.Youtube_dl Then
 		    o.TmpFile.CopyFileTo o.FinalFolderItem
-		  ElseIf o.FinalFolderItem.DisplayName.InStr("ffmpeg")> 0 Then
-		    'o.TmpFile.CopyFileTo o.FinalFolderItem.Child("ffmpeg.zip")
+		  ElseIf o.DownloadType= DownloadFile.TypeDownload.Ffmpeg Then
 		    Try
 		      Dim files() As FolderItem= PKZip.ReadZip(o.TmpFile, o.FinalFolderItem.Parent)
 		      o.FinalFolderItem.Delete
@@ -279,6 +281,12 @@ End
 		    Catch e As RuntimeException
 		      System.DebugLog CurrentMethodName+ " e.Message: "+ e.Message
 		    End Try
+		  ElseIf o.DownloadType= DownloadFile.TypeDownload.Vcredist Then
+		    Try
+		      Dim files() As FolderItem= PKZip.ReadZip(o.TmpFile, o.FinalFolderItem)
+		    Catch e As RuntimeException
+		      System.DebugLog CurrentMethodName+ " e.Message: "+ e.Message
+		    End Try
 		  End If
 		  
 		  If YoutubeDlFile.Exists And FfmpegFile.Exists Then
@@ -288,6 +296,35 @@ End
 		  HistoryPanel1.Listbox1.Cell(o.Idx, 1)= "Completado!"
 		  
 		  o.IsRunning= False
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub DownloadVcredist()
+		  Const kUrl_vcredist= "https://www.dropbox.com/s/p978euou1auz4vy/vcredist_100.zip?dl=1"
+		  
+		  Dim folderYoutubeDl As FolderItem= SpecialFolder.ApplicationData.Child(BrandName).Child(kYoutubedl)
+		  
+		  Dim dfv As New DownloadFile
+		  AddHandler dfv.Progress, WeakAddressOf dfProgress
+		  AddHandler dfv.TransferComplete, WeakAddressOf dfTransferComplete
+		  dfv.DownloadType= DownloadFile.TypeDownload.Vcredist
+		  dfv.TmpFile= GetTemporaryFolderItem
+		  dfv.TmpBs= BinaryStream.Create(dfv.TmpFile, True)
+		  dfv.FinalFolderItem= folderYoutubeDl
+		  dfv.Get kUrl_vcredist, dfv.TmpBs
+		  DownloadFiles.Append dfv
+		  
+		  HistoryPanel1.Listbox1.AddRow kUrl_vcredist
+		  dfv.Idx= HistoryPanel1.Listbox1.LastIndex
+		  dfv.IsRunning= True
+		  
+		  TabPanel1.Value= 1
+		  
+		  If Timer1.Mode= Timer.ModeOff Then
+		    Timer1.Mode= Timer1.ModeMultiple
+		    Timer1.Enabled= True
+		  End If
 		End Sub
 	#tag EndMethod
 

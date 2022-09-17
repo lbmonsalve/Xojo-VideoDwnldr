@@ -41,7 +41,7 @@ Begin ContainerControl ConfigPanel
       GridLinesVertical=   0
       HasHeading      =   True
       HeadingIndex    =   -1
-      Height          =   208
+      Height          =   220
       HelpTag         =   ""
       Hierarchical    =   ""
       Index           =   -2147483648
@@ -110,7 +110,7 @@ Begin ContainerControl ConfigPanel
       TextFont        =   "System"
       TextSize        =   16
       TextUnit        =   0
-      Top             =   250
+      Top             =   254
       Underline       =   False
       Value           =   False
       Visible         =   True

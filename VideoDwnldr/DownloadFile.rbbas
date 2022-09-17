@@ -2,6 +2,10 @@
 Protected Class DownloadFile
 Inherits libcURL.cURLClient
 	#tag Property, Flags = &h0
+		DownloadType As TypeDownload
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
 		FinalFolderItem As FolderItem
 	#tag EndProperty
 
@@ -22,6 +26,13 @@ Inherits libcURL.cURLClient
 	#tag EndProperty
 
 
+	#tag Enum, Name = TypeDownload, Type = Integer, Flags = &h0
+		Youtube_dl
+		  Ffmpeg
+		Vcredist
+	#tag EndEnum
+
+
 	#tag ViewBehavior
 		#tag ViewProperty
 			Name="Idx"
@@ -36,6 +47,11 @@ Inherits libcURL.cURLClient
 			InitialValue="-2147483648"
 			Type="Integer"
 			InheritedFrom="Object"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsRunning"
+			Group="Behavior"
+			Type="Boolean"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsSSLCertOK"
