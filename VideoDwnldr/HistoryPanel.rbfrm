@@ -29,11 +29,11 @@ Begin ContainerControl HistoryPanel
       Bold            =   ""
       Border          =   True
       ColumnCount     =   2
-      ColumnsResizable=   True
+      ColumnsResizable=   False
       ColumnWidths    =   "*,*"
       DataField       =   ""
       DataSource      =   ""
-      DefaultRowHeight=   -1
+      DefaultRowHeight=   26
       Enabled         =   True
       EnableDrag      =   ""
       EnableDragReorder=   ""
@@ -41,7 +41,7 @@ Begin ContainerControl HistoryPanel
       GridLinesVertical=   0
       HasHeading      =   ""
       HeadingIndex    =   -1
-      Height          =   260
+      Height          =   220
       HelpTag         =   ""
       Hierarchical    =   ""
       Index           =   -2147483648
@@ -72,9 +72,52 @@ Begin ContainerControl HistoryPanel
       Width           =   360
       _ScrollWidth    =   -1
    End
+   Begin Label Label1
+      AutoDeactivate  =   True
+      Bold            =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   24
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   20
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   False
+      Multiline       =   ""
+      Scope           =   0
+      Selectable      =   True
+      TabIndex        =   1
+      TabPanelIndex   =   0
+      Text            =   ""
+      TextAlign       =   0
+      TextColor       =   &h000000FF
+      TextFont        =   "System"
+      TextSize        =   16
+      TextUnit        =   0
+      Top             =   256
+      Transparent     =   False
+      Underline       =   True
+      Visible         =   True
+      Width           =   360
+   End
 End
 #tag EndWindow
 
 #tag WindowCode
 #tag EndWindowCode
 
+#tag Events Listbox1
+	#tag Event
+		Function CellClick(row as Integer, column as Integer, x as Integer, y as Integer) As Boolean
+		  If column= 0 Then
+		    Label1.Text= Me.Cell(row, 0)
+		  End If
+		End Function
+	#tag EndEvent
+#tag EndEvents

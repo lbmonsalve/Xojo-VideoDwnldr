@@ -54,7 +54,7 @@ Begin ContainerControl DownloadPanel
       LockTop         =   True
       MenuValue       =   0
       Scope           =   0
-      TabIndex        =   0
+      TabIndex        =   1
       TabPanelIndex   =   0
       TabStop         =   True
       TextColor       =   "&c00000000"
@@ -95,7 +95,7 @@ Begin ContainerControl DownloadPanel
       Password        =   ""
       ReadOnly        =   ""
       Scope           =   0
-      TabIndex        =   1
+      TabIndex        =   0
       TabPanelIndex   =   0
       TabStop         =   True
       Text            =   ""
@@ -115,16 +115,16 @@ Begin ContainerControl DownloadPanel
       Bold            =   ""
       Border          =   True
       ColumnCount     =   3
-      ColumnsResizable=   ""
+      ColumnsResizable=   True
       ColumnWidths    =   "10%,15%,75%"
       DataField       =   ""
       DataSource      =   ""
-      DefaultRowHeight=   -1
+      DefaultRowHeight=   26
       Enabled         =   True
       EnableDrag      =   ""
       EnableDragReorder=   ""
       GridLinesHorizontal=   0
-      GridLinesVertical=   0
+      GridLinesVertical=   2
       HasHeading      =   True
       HeadingIndex    =   -1
       Height          =   169
@@ -189,7 +189,7 @@ Begin ContainerControl DownloadPanel
       LockTop         =   False
       MenuValue       =   0
       Scope           =   0
-      TabIndex        =   3
+      TabIndex        =   4
       TabPanelIndex   =   0
       TabStop         =   True
       TextColor       =   "&c00000000"
@@ -208,43 +208,41 @@ Begin ContainerControl DownloadPanel
       Left            =   -30
       LockedInPosition=   False
       Mode            =   0
-      Period          =   3000
+      Period          =   1000
       Scope           =   0
       TabPanelIndex   =   0
       Top             =   -30
       Width           =   32
    End
-   Begin Label Label1
+   Begin ComboBox ComboBox1
+      AutoComplete    =   False
       AutoDeactivate  =   True
       Bold            =   ""
       DataField       =   ""
       DataSource      =   ""
       Enabled         =   True
-      Height          =   28
+      Height          =   30
       HelpTag         =   ""
       Index           =   -2147483648
-      InitialParent   =   ""
+      InitialValue    =   "Normal\r\nMenorCalidad\r\nMejorCalidad"
       Italic          =   ""
       Left            =   20
+      ListIndex       =   0
       LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   True
       LockRight       =   True
       LockTop         =   False
-      Multiline       =   True
       Scope           =   0
-      Selectable      =   True
-      TabIndex        =   4
+      TabIndex        =   3
       TabPanelIndex   =   0
-      Text            =   ""
-      TextAlign       =   0
-      TextColor       =   &h000000
+      TabStop         =   True
       TextFont        =   "System"
       TextSize        =   16
       TextUnit        =   0
       Top             =   250
-      Transparent     =   False
       Underline       =   ""
+      UseFocusRing    =   True
       Visible         =   True
       Width           =   258
    End
@@ -275,7 +273,6 @@ End
 		  Dim pos As Integer= data.InStr("estination:")
 		  If pos> 0 Then
 		    data= data.Mid(pos+ 12).Trim
-		    Label1.Text= data
 		    Try
 		      Dim file As New FolderItem(data)
 		      PanelHistory.Listbox1.Cell(o.Idx, 0)= file.DisplayName
@@ -296,11 +293,11 @@ End
 
 
 	#tag Property, Flags = &h0
-		FfmpegFile As FolderItem
+		Cmds() As Cmd
 	#tag EndProperty
 
-	#tag Property, Flags = &h21
-		Private mCmds() As Cmd
+	#tag Property, Flags = &h0
+		FfmpegFile As FolderItem
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -365,18 +362,30 @@ End
 		    Return
 		  End If
 		  
-		  If Listbox1.ListIndex= -1 Then
-		    MsgBox "Seleccione resolucion a descargar"
-		    Return
+		  Dim fmtSel, fmtOut As String
+		  
+		  If ComboBox1.Text= "Normal" Then
+		    If Listbox1.ListIndex= -1 Then
+		      MsgBox "Seleccione resolucion a descargar"
+		      Return
+		    End If
+		    fmtSel= Listbox1.RowTag(Listbox1.ListIndex).StringValue
+		    fmtOut= """"+ SpecialFolder.Movies.ShellPath+ "\%(title)s-%(id)s.%(ext)s"""
+		  ElseIf ComboBox1.Text= "MenorCalidad" Then
+		    fmtSel= "worstvideo+worstaudio"
+		    fmtOut= """"+ SpecialFolder.Movies.ShellPath+ "\%(title)s-worst-%(id)s.%(ext)s"""
+		  ElseIf ComboBox1.Text= "MejorCalidad" Then
+		    fmtSel= "bestvideo+bestaudio"
+		    fmtOut= """"+ SpecialFolder.Movies.ShellPath+ "\%(title)s-best-%(id)s.%(ext)s"""
 		  End If
 		  
 		  PanelHistory.Listbox1.AddRow "Iniciando..."
 		  Dim idx As Integer= PanelHistory.Listbox1.LastIndex
 		  
 		  Dim cmd As String= YoutubeDlFile.ShellPath+ _
-		  " -f "+ Listbox1.RowTag(Listbox1.ListIndex).StringValue+ _
+		  " -f "+ fmtSel+ _
 		  " --ffmpeg-location "+ FfmpegFile.ShellPath+ _
-		  " -o """+ SpecialFolder.Movies.ShellPath+ "\%(title)s-%(id)s.%(ext)s"""+ _
+		  " -o "+ fmtOut+ _
 		  " "+ TextField1.Text
 		  
 		  Dim ss As New Cmd
@@ -386,7 +395,7 @@ End
 		  ss.Idx= idx
 		  ss.Execute cmd
 		  
-		  mCmds.Append ss
+		  Cmds.Append ss
 		  
 		  If Timer1.Mode= Timer.ModeOff Then
 		    Timer1.Mode= Timer1.ModeMultiple
@@ -402,21 +411,24 @@ End
 		Sub Action()
 		  Dim idxs() As Integer
 		  
-		  For i As Integer= 0 To mCmds.Ubound
-		    Dim ss As Cmd= mCmds(i)
+		  For i As Integer= 0 To Cmds.Ubound
+		    Dim ss As Cmd= Cmds(i)
 		    If Not ss.IsRunning Then
 		      RemoveHandler ss.DataAvailable, WeakAddressOf CmdDataAvailable
 		      RemoveHandler ss.Completed, WeakAddressOf CmdCompleted
 		      idxs.Append i
 		    End If
+		    If ss.ErrorCode<> 0 Then
+		      System.DebugLog CurrentMethodName+ " ss.ErrorCode: "+ Str(ss.ErrorCode)
+		    End If
 		  Next
 		  
 		  For Each idx As Integer In idxs
-		    mCmds.Remove idx
-		    'System.DebugLog CurrentMethodName+ " mCmds.Remove "+ Str(idx)
+		    Cmds.Remove idx
+		    'System.DebugLog CurrentMethodName+ " Cmds.Remove "+ Str(idx)
 		  Next
 		  
-		  If mCmds.Ubound= -1 Then
+		  If Cmds.Ubound= -1 Then
 		    Me.Mode= Timer.ModeOff
 		    'System.DebugLog CurrentMethodName+ " Me.Mode= Timer.ModeOff"
 		  End If

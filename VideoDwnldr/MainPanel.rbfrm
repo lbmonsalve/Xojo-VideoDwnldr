@@ -108,6 +108,18 @@ Begin ContainerControl MainPanel
          Width           =   598
       End
    End
+   Begin Timer Timer1
+      Height          =   32
+      Index           =   -2147483648
+      Left            =   -30
+      LockedInPosition=   False
+      Mode            =   0
+      Period          =   1000
+      Scope           =   0
+      TabPanelIndex   =   0
+      Top             =   -30
+      Width           =   32
+   End
 End
 #tag EndWindow
 
@@ -132,6 +144,7 @@ End
 		  
 		  If YoutubeDlFile.Exists And FfmpegFile.Exists Then
 		    DownloadPanel1.Enabled= True
+		    DownloadPanel1.BevelButton1.SetFocus
 		    Return
 		  End If
 		  
@@ -149,6 +162,7 @@ End
 		    
 		    HistoryPanel1.Listbox1.AddRow json.Value("url_youtube_dl").StringValue
 		    dfy.Idx= HistoryPanel1.Listbox1.LastIndex
+		    dfy.IsRunning= True
 		  End If
 		  
 		  If Not FfmpegFile.Exists Then
@@ -163,9 +177,15 @@ End
 		    
 		    HistoryPanel1.Listbox1.AddRow json.Value("url_ffmpeg").StringValue
 		    dff.Idx= HistoryPanel1.Listbox1.LastIndex
+		    dff.IsRunning= True
 		  End If
 		  
 		  TabPanel1.Value= 1
+		  
+		  If Timer1.Mode= Timer.ModeOff Then
+		    Timer1.Mode= Timer1.ModeMultiple
+		    Timer1.Enabled= True
+		  End If
 		End Sub
 	#tag EndEvent
 
@@ -226,6 +246,8 @@ End
 		  End If
 		  
 		  HistoryPanel1.Listbox1.Cell(o.Idx, 1)= "Completado!"
+		  
+		  o.IsRunning= False
 		End Sub
 	#tag EndMethod
 
@@ -234,8 +256,8 @@ End
 		BrandName As String = "VideoDwnldr"
 	#tag EndProperty
 
-	#tag Property, Flags = &h21
-		Private DownloadFiles() As DownloadFile
+	#tag Property, Flags = &h0
+		DownloadFiles() As DownloadFile
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -294,3 +316,29 @@ End
 
 #tag EndWindowCode
 
+#tag Events Timer1
+	#tag Event
+		Sub Action()
+		  Dim idxs() As Integer
+		  
+		  For i As Integer= 0 To DownloadFiles.Ubound
+		    Dim df As DownloadFile= DownloadFiles(i)
+		    If Not df.IsRunning Then
+		      RemoveHandler df.Progress, WeakAddressOf dfProgress
+		      RemoveHandler df.TransferComplete, WeakAddressOf dfTransferComplete
+		      idxs.Append i
+		    End If
+		  Next
+		  
+		  For Each idx As Integer In idxs
+		    DownloadFiles.Remove idx
+		    'System.DebugLog CurrentMethodName+ " DownloadFiles.Remove "+ Str(idx)
+		  Next
+		  
+		  If DownloadFiles.Ubound= -1 Then
+		    Me.Mode= Timer.ModeOff
+		    'System.DebugLog CurrentMethodName+ " Me.Mode= Timer.ModeOff"
+		  End If
+		End Sub
+	#tag EndEvent
+#tag EndEvents

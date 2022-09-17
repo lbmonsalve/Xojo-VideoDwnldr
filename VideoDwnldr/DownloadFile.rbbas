@@ -10,6 +10,10 @@ Inherits libcURL.cURLClient
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
+		IsRunning As Boolean
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
 		TmpBs As BinaryStream
 	#tag EndProperty
 
@@ -19,6 +23,12 @@ Inherits libcURL.cURLClient
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="Idx"
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Index"
 			Visible=true

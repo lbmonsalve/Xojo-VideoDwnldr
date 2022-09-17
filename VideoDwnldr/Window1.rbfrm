@@ -56,5 +56,20 @@ End
 #tag EndWindow
 
 #tag WindowCode
+	#tag Event
+		Function CancelClose(appQuitting as Boolean) As Boolean
+		  If MainPanel1.DownloadFiles.Ubound> -1 Then
+		    MsgBox "Espere terminar descarga archivos soporte..."
+		    Return True
+		  End If
+		  
+		  If MainPanel1.DownloadPanel1.Cmds.Ubound> -1 Then
+		    MsgBox "Espere terminar descarga videos..."
+		    Return True
+		  End If
+		End Function
+	#tag EndEvent
+
+
 #tag EndWindowCode
 
