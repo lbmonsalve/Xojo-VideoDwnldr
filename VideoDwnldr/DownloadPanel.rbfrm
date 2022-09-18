@@ -81,7 +81,7 @@ Begin ContainerControl DownloadPanel
       Enabled         =   True
       Format          =   ""
       Height          =   30
-      HelpTag         =   "URL/dirección web"
+      HelpTag         =   "#kLocURL"
       Index           =   -2147483648
       Italic          =   ""
       Left            =   20
@@ -127,7 +127,7 @@ Begin ContainerControl DownloadPanel
       GridLinesVertical=   2
       HasHeading      =   True
       HeadingIndex    =   -1
-      Height          =   169
+      Height          =   170
       HelpTag         =   ""
       Hierarchical    =   ""
       Index           =   -2147483648
@@ -151,7 +151,7 @@ Begin ContainerControl DownloadPanel
       TextFont        =   "System"
       TextSize        =   16
       TextUnit        =   0
-      Top             =   69
+      Top             =   70
       Underline       =   ""
       UseFocusRing    =   False
       Visible         =   True
@@ -224,7 +224,7 @@ Begin ContainerControl DownloadPanel
       Height          =   30
       HelpTag         =   ""
       Index           =   -2147483648
-      InitialValue    =   "#kLocNormalQuality\r\n#kLocWorstQuality\r\n#kLocBestQuality"
+      InitialValue    =   "#kLocAvailableQuality\r\n#kLocWorstQuality\r\n#kLocBestQuality"
       Italic          =   ""
       Left            =   20
       ListIndex       =   0
@@ -333,6 +333,11 @@ End
 	#tag EndProperty
 
 
+	#tag Constant, Name = kLocAvailableQuality, Type = String, Dynamic = True, Default = \"AvailableQuality", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"AvailableQuality"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"DisponibleCalidad"
+	#tag EndConstant
+
 	#tag Constant, Name = kLocBestQuality, Type = String, Dynamic = True, Default = \"BestQuality", Scope = Public
 		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"BestQuality"
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"MejorCalidad"
@@ -358,11 +363,6 @@ End
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Escriba direcci\xC3\xB3n del archivo a descargar"
 	#tag EndConstant
 
-	#tag Constant, Name = kLocNormalQuality, Type = String, Dynamic = True, Default = \"NormalQuality", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"NormalQuality"
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"NormalCalidad"
-	#tag EndConstant
-
 	#tag Constant, Name = kLocNote, Type = String, Dynamic = True, Default = \"Note", Scope = Public
 		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"Note"
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Nota"
@@ -376,6 +376,11 @@ End
 	#tag Constant, Name = kLocType, Type = String, Dynamic = True, Default = \"Type", Scope = Public
 		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"Type"
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Tipo"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocUrl, Type = String, Dynamic = True, Default = \"URL / web adress", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"URL / web address"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Direcci\xC3\xB3n web / URL"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocWorstQuality, Type = String, Dynamic = True, Default = \"WorstQuality", Scope = Public
@@ -441,7 +446,7 @@ End
 		  
 		  Dim fmtSel, fmtOut As String
 		  
-		  If ComboBox1.Text= kLocNormalQuality Then
+		  If ComboBox1.Text= kLocAvailableQuality Then
 		    If Listbox1.ListIndex= -1 Then
 		      MsgBox kLocMsgSRD
 		      Return
@@ -479,6 +484,8 @@ End
 		    Timer1.Mode= Timer1.ModeMultiple
 		    Timer1.Enabled= True
 		  End If
+		  
+		  PanelMain.TabPanel1.Value= 1
 		  
 		  System.DebugLog CurrentMethodName+ " "+ cmd
 		End Sub

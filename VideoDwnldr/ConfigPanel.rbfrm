@@ -22,7 +22,7 @@ Begin ContainerControl ConfigPanel
    Top             =   ""
    UseFocusRing    =   ""
    Visible         =   True
-   Width           =   300
+   Width           =   400
    Begin Listbox Listbox1
       AutoDeactivate  =   True
       AutoHideScrollbars=   True
@@ -69,7 +69,7 @@ Begin ContainerControl ConfigPanel
       Underline       =   ""
       UseFocusRing    =   True
       Visible         =   True
-      Width           =   260
+      Width           =   360
       _ScrollWidth    =   -1
    End
    Begin BevelButton BevelButton1
@@ -95,7 +95,7 @@ Begin ContainerControl ConfigPanel
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
-      Left            =   190
+      Left            =   290
       LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   False
@@ -110,7 +110,7 @@ Begin ContainerControl ConfigPanel
       TextFont        =   "System"
       TextSize        =   16
       TextUnit        =   0
-      Top             =   254
+      Top             =   250
       Underline       =   False
       Value           =   False
       Visible         =   True

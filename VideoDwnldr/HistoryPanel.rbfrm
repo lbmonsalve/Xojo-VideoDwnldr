@@ -72,37 +72,46 @@ Begin ContainerControl HistoryPanel
       Width           =   360
       _ScrollWidth    =   -1
    End
-   Begin Label Label1
+   Begin TextField TextField1
+      AcceptTabs      =   ""
+      Alignment       =   0
       AutoDeactivate  =   True
+      AutomaticallyCheckSpelling=   False
+      BackColor       =   &hFFFFFF
       Bold            =   ""
+      Border          =   False
+      CueText         =   ""
       DataField       =   ""
       DataSource      =   ""
       Enabled         =   True
-      Height          =   24
+      Format          =   ""
+      Height          =   30
       HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
       Left            =   20
+      LimitText       =   0
       LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   True
       LockRight       =   True
       LockTop         =   False
-      Multiline       =   ""
+      Mask            =   ""
+      Password        =   ""
+      ReadOnly        =   False
       Scope           =   0
-      Selectable      =   False
       TabIndex        =   1
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   ""
-      TextAlign       =   0
       TextColor       =   &h000000FF
       TextFont        =   "System"
       TextSize        =   16
       TextUnit        =   0
-      Top             =   256
-      Transparent     =   False
-      Underline       =   True
+      Top             =   250
+      Underline       =   False
+      UseFocusRing    =   True
       Visible         =   True
       Width           =   360
    End
@@ -116,25 +125,35 @@ End
 	#tag Event
 		Function CellClick(row as Integer, column as Integer, x as Integer, y as Integer) As Boolean
 		  If column= 0 Then
-		    Label1.Text= Me.Cell(row, 0)
+		    TextField1.Text= Me.Cell(row, 0)
+		  End If
+		End Function
+	#tag EndEvent
+	#tag Event
+		Sub DoubleClick()
+		  If Listbox1.ListIndex<> -1 Then
+		    Dim folder As FolderItem= Listbox1.RowTag(Listbox1.ListIndex)
+		    If folder.Directory Then folder.Launch
+		  End If
+		  
+		End Sub
+	#tag EndEvent
+	#tag Event
+		Function CellTextPaint(g As Graphics, row As Integer, column As Integer, x as Integer, y as Integer) As Boolean
+		  If row< Me.ListCount And column= 1 Then
+		    If Me.Cell(row, 1)= MainPanel.kLocCompleted Then
+		      g.ForeColor= &c00400000
+		    Else
+		      g.ForeColor= &c80000000
+		    End If
 		  End If
 		End Function
 	#tag EndEvent
 #tag EndEvents
-#tag Events Label1
+#tag Events TextField1
 	#tag Event
-		Function MouseDown(X As Integer, Y As Integer) As Boolean
-		  If Me.Text.Len> 0 Then Return True Else Return False
-		End Function
-	#tag EndEvent
-	#tag Event
-		Sub MouseUp(X As Integer, Y As Integer)
-		  If Not (x< 0 Or y< 0 Or x> Me.Width Or y> Me.Height) Then
-		    If Listbox1.ListIndex<> -1 Then
-		      Dim folder As FolderItem= Listbox1.RowTag(Listbox1.ListIndex)
-		      If folder.Directory Then folder.Launch
-		    End If
-		  End If
+		Sub Open()
+		  Me.BackColor= Self.BackColor
 		End Sub
 	#tag EndEvent
 #tag EndEvents
