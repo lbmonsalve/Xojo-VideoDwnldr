@@ -46,7 +46,7 @@ Begin ContainerControl ConfigPanel
       Hierarchical    =   ""
       Index           =   -2147483648
       InitialParent   =   ""
-      InitialValue    =   "Prop	Valor"
+      InitialValue    =   "#kLocProp	#kLocValue"
       Italic          =   ""
       Left            =   20
       LockBottom      =   True
@@ -79,7 +79,7 @@ Begin ContainerControl ConfigPanel
       Bevel           =   0
       Bold            =   False
       ButtonType      =   0
-      Caption         =   "Grabar"
+      Caption         =   "#kLocSave"
       CaptionAlign    =   3
       CaptionDelta    =   0
       CaptionPlacement=   1
@@ -95,7 +95,7 @@ Begin ContainerControl ConfigPanel
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
-      Left            =   210
+      Left            =   190
       LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   False
@@ -114,7 +114,7 @@ Begin ContainerControl ConfigPanel
       Underline       =   False
       Value           =   False
       Visible         =   True
-      Width           =   70
+      Width           =   90
    End
 End
 #tag EndWindow
@@ -123,6 +123,20 @@ End
 	#tag Property, Flags = &h0
 		PreferencesFile As FolderItem
 	#tag EndProperty
+
+
+	#tag Constant, Name = kLocProp, Type = String, Dynamic = True, Default = \"Prop", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = kLocSave, Type = String, Dynamic = True, Default = \"Save", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"Save"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Grabar"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocValue, Type = String, Dynamic = True, Default = \"Value", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"Value"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Valor"
+	#tag EndConstant
 
 
 #tag EndWindowCode

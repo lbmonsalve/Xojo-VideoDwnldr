@@ -41,7 +41,7 @@ Begin ContainerControl MainPanel
       Panels          =   ""
       Scope           =   0
       SmallTabs       =   ""
-      TabDefinition   =   "Descarga\rHistorial\rConfiguración"
+      TabDefinition   =   "#kLocDownload\r#kLocHistory\r#kLocConfig"
       TabIndex        =   0
       TabPanelIndex   =   0
       TabStop         =   True
@@ -163,7 +163,7 @@ End
 		  If Not folderFfmpeg.Exists Then folderFfmpeg.CreateAsFolder
 		  
 		  YoutubeDlFile= folderYoutubeDl.Child("youtube-dl.exe")
-		  FfmpegFile= folderFfmpeg.Child("ffmpeg.exe")
+		  FfmpegFile= folderFfmpeg.Child(kFfmpegBin)
 		  
 		  Dim json As JSONData= PreferencesFile.OpenAsJSONData
 		  
@@ -238,8 +238,8 @@ End
 		  Dim json As New JSONData
 		  json.Compact= False
 		  
-		  json.Value(kUrl_youtube_dl)= "https://www.dropbox.com/s/ibq3eq8cy2hp584/youtube-dl.exe?dl=1"
-		  json.Value(kUrl_ffmpeg)= "https://www.dropbox.com/s/ue2z3b7q7372mgs/ffmpeg-win-2.2.2.zip?dl=1"
+		  json.Value(kUrl_youtube_dl)= kUrl_youtube_dl_value
+		  json.Value(kUrl_ffmpeg)= kUrl_ffmpeg_value
 		  json.Value(kVideos_folder)= SpecialFolder.Movies.AbsoluteNativePath
 		  
 		  Dim tos As TextOutputStream= TextOutputStream.Create(f)
@@ -250,9 +250,6 @@ End
 
 	#tag Method, Flags = &h21
 		Private Function dfProgress(o As DownloadFile, dlTotal As Int64, dlNow As Int64, ulTotal As Int64, ulNow As Int64) As Boolean
-		  'System.DebugLog CurrentMethodName+ " "+ o.TmpFile.AbsoluteNativePath+ _
-		  '" dlNow: "+ Str(dlNow)
-		  
 		  If o.Idx<> -1 Then
 		    Dim perc As Integer= dlNow* 100/ dlTotal
 		    HistoryPanel1.Listbox1.Cell(o.Idx, 1)= Str(perc, "###")+ "% of "+ Str(dlTotal)
@@ -262,8 +259,6 @@ End
 
 	#tag Method, Flags = &h21
 		Private Sub dfTransferComplete(o As DownloadFile, BytesRead As Integer, BytesWritten As Integer)
-		  'System.DebugLog CurrentMethodName+ " "+ o.TmpFile.AbsoluteNativePath
-		  
 		  If o.DownloadType= DownloadFile.TypeDownload.Youtube_dl Then
 		    o.TmpFile.CopyFileTo o.FinalFolderItem
 		  ElseIf o.DownloadType= DownloadFile.TypeDownload.Ffmpeg Then
@@ -274,7 +269,7 @@ End
 		        Dim file As FolderItem= files(i)
 		        If file.Directory And file.Name.InStr("ffmpeg-")> 0 Then
 		          file.Name= "ffmpeg"
-		          FfmpegFile= file.Child("ffmpeg.exe")
+		          FfmpegFile= file.Child(kFfmpegBin)
 		          Exit
 		        End If
 		      Next
@@ -293,7 +288,7 @@ End
 		    DownloadPanel1.Enabled= True
 		  End If
 		  
-		  HistoryPanel1.Listbox1.Cell(o.Idx, 1)= "Completado!"
+		  HistoryPanel1.Listbox1.Cell(o.Idx, 1)= kLocCompleted
 		  
 		  o.IsRunning= False
 		End Sub
@@ -301,30 +296,30 @@ End
 
 	#tag Method, Flags = &h0
 		Sub DownloadVcredist()
-		  Const kUrl_vcredist= "https://www.dropbox.com/s/p978euou1auz4vy/vcredist_100.zip?dl=1"
-		  
-		  Dim folderYoutubeDl As FolderItem= SpecialFolder.ApplicationData.Child(BrandName).Child(kYoutubedl)
-		  
-		  Dim dfv As New DownloadFile
-		  AddHandler dfv.Progress, WeakAddressOf dfProgress
-		  AddHandler dfv.TransferComplete, WeakAddressOf dfTransferComplete
-		  dfv.DownloadType= DownloadFile.TypeDownload.Vcredist
-		  dfv.TmpFile= GetTemporaryFolderItem
-		  dfv.TmpBs= BinaryStream.Create(dfv.TmpFile, True)
-		  dfv.FinalFolderItem= folderYoutubeDl
-		  dfv.Get kUrl_vcredist, dfv.TmpBs
-		  DownloadFiles.Append dfv
-		  
-		  HistoryPanel1.Listbox1.AddRow kUrl_vcredist
-		  dfv.Idx= HistoryPanel1.Listbox1.LastIndex
-		  dfv.IsRunning= True
-		  
-		  TabPanel1.Value= 1
-		  
-		  If Timer1.Mode= Timer.ModeOff Then
-		    Timer1.Mode= Timer1.ModeMultiple
-		    Timer1.Enabled= True
-		  End If
+		  #if TargetWin32
+		    Dim folderYoutubeDl As FolderItem= SpecialFolder.ApplicationData.Child(BrandName).Child(kYoutubedl)
+		    
+		    Dim dfv As New DownloadFile
+		    AddHandler dfv.Progress, WeakAddressOf dfProgress
+		    AddHandler dfv.TransferComplete, WeakAddressOf dfTransferComplete
+		    dfv.DownloadType= DownloadFile.TypeDownload.Vcredist
+		    dfv.TmpFile= GetTemporaryFolderItem
+		    dfv.TmpBs= BinaryStream.Create(dfv.TmpFile, True)
+		    dfv.FinalFolderItem= folderYoutubeDl
+		    dfv.Get kUrl_vcredist_value, dfv.TmpBs
+		    DownloadFiles.Append dfv
+		    
+		    HistoryPanel1.Listbox1.AddRow kUrl_vcredist_value
+		    dfv.Idx= HistoryPanel1.Listbox1.LastIndex
+		    dfv.IsRunning= True
+		    
+		    TabPanel1.Value= 1
+		    
+		    If Timer1.Mode= Timer.ModeOff Then
+		      Timer1.Mode= Timer1.ModeMultiple
+		      Timer1.Enabled= True
+		    End If
+		  #endif
 		End Sub
 	#tag EndMethod
 
@@ -387,16 +382,56 @@ End
 	#tag Constant, Name = kFfmpeg, Type = String, Dynamic = False, Default = \"ffmpeg", Scope = Private
 	#tag EndConstant
 
+	#tag Constant, Name = kFfmpegBin, Type = String, Dynamic = True, Default = \"ffmpeg.exe", Scope = Private
+		#Tag Instance, Platform = Mac OS, Language = Default, Definition  = \"ffmpeg.exe"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocCompleted, Type = String, Dynamic = True, Default = \"Completado!", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Completado!"
+		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"Completed"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocConfig, Type = String, Dynamic = True, Default = \"Configuration", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"Configuration"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Configuraci\xC3\xB3n"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocDownload, Type = String, Dynamic = True, Default = \"Download", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"Download"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Descarga"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocHistory, Type = String, Dynamic = True, Default = \"History", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"History"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Historial"
+	#tag EndConstant
+
 	#tag Constant, Name = kUrl_ffmpeg, Type = String, Dynamic = False, Default = \"url_ffmpeg", Scope = Public
 	#tag EndConstant
 
+	#tag Constant, Name = kUrl_ffmpeg_value, Type = String, Dynamic = True, Default = \"https://www.dropbox.com/s/ue2z3b7q7372mgs/ffmpeg-win-2.2.2.zip\?dl\x3D1", Scope = Private
+		#Tag Instance, Platform = Mac OS, Language = Default, Definition  = \"https://www.dropbox.com/s/ue2z3b7q7372mgs/ffmpeg-win-2.2.2.zip\?dl\x3D1"
+	#tag EndConstant
+
+	#tag Constant, Name = kUrl_vcredist_value, Type = String, Dynamic = True, Default = \"https://www.dropbox.com/s/p978euou1auz4vy/vcredist_100.zip\?dl\x3D1", Scope = Private
+		#Tag Instance, Platform = Mac OS, Language = Default, Definition  = \"https://www.dropbox.com/s/p978euou1auz4vy/vcredist_100.zip\?dl\x3D1"
+	#tag EndConstant
+
 	#tag Constant, Name = kUrl_youtube_dl, Type = String, Dynamic = False, Default = \"url_youtube_dl", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = kUrl_youtube_dl_value, Type = String, Dynamic = True, Default = \"https://www.dropbox.com/s/ibq3eq8cy2hp584/youtube-dl.exe\?dl\x3D1", Scope = Private
+		#Tag Instance, Platform = Mac OS, Language = Default, Definition  = \"https://www.dropbox.com/s/ibq3eq8cy2hp584/youtube-dl.exe\?dl\x3D1"
 	#tag EndConstant
 
 	#tag Constant, Name = kVideos_folder, Type = String, Dynamic = False, Default = \"videos_folder", Scope = Public
 	#tag EndConstant
 
 	#tag Constant, Name = kYoutubedl, Type = String, Dynamic = False, Default = \"youtube-dl", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = kYoutubedlBin, Type = String, Dynamic = True, Default = \"youtube-dl.exe", Scope = Private
+		#Tag Instance, Platform = Mac OS, Language = Default, Definition  = \"youtube-dl.exe"
 	#tag EndConstant
 
 

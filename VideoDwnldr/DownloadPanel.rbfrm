@@ -132,7 +132,7 @@ Begin ContainerControl DownloadPanel
       Hierarchical    =   ""
       Index           =   -2147483648
       InitialParent   =   ""
-      InitialValue    =   "Type	Resolution	Note"
+      InitialValue    =   "#kLocType	#kLocResolution	#kLocNote"
       Italic          =   ""
       Left            =   20
       LockBottom      =   True
@@ -165,7 +165,7 @@ Begin ContainerControl DownloadPanel
       Bevel           =   0
       Bold            =   False
       ButtonType      =   0
-      Caption         =   "Descargar"
+      Caption         =   "#MainPanel.kLocDownload"
       CaptionAlign    =   3
       CaptionDelta    =   0
       CaptionPlacement=   1
@@ -224,7 +224,7 @@ Begin ContainerControl DownloadPanel
       Height          =   30
       HelpTag         =   ""
       Index           =   -2147483648
-      InitialValue    =   "Normal\r\nMenorCalidad\r\nMejorCalidad"
+      InitialValue    =   "#kLocNormalQuality\r\n#kLocWorstQuality\r\n#kLocBestQuality"
       Italic          =   ""
       Left            =   20
       ListIndex       =   0
@@ -254,7 +254,7 @@ End
 		Private Sub CmdCompleted(o As Cmd)
 		  If o.Idx= -1 Then Return
 		  
-		  PanelHistory.Listbox1.Cell(o.Idx, 1)= "Completado!"
+		  PanelHistory.Listbox1.Cell(o.Idx, 1)= MainPanel.kLocCompleted
 		End Sub
 	#tag EndMethod
 
@@ -263,7 +263,6 @@ End
 		  If o.Idx= -1 Then Return
 		  
 		  Dim result As String= ReplaceLineEndings(ConvertEncoding(o.ReadAll, Encodings.UTF8), EndOfLine.Windows)
-		  'System.DebugLog CurrentMethodName+ " result: "+ result
 		  Dim results() As String= result.Split(EndOfLine.Windows)
 		  
 		  While results(0).Len= 0
@@ -334,13 +333,64 @@ End
 	#tag EndProperty
 
 
+	#tag Constant, Name = kLocBestQuality, Type = String, Dynamic = True, Default = \"BestQuality", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"BestQuality"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"MejorCalidad"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocInit, Type = String, Dynamic = True, Default = \"Init...", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"Init..."
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Iniciando..."
+	#tag EndConstant
+
+	#tag Constant, Name = kLocMsgCVRA, Type = String, Dynamic = True, Default = \"Check video resolutions available", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"Check video resolutions available"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"cheqee resoluciones de video disponibles"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocMsgSRD, Type = String, Dynamic = True, Default = \"Select resolution to download", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"Select resolution to download"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Seleccione resolucion a descarga"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocMsgWFAD, Type = String, Dynamic = True, Default = \"Write file address to download", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"Write file address to download"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Escriba direcci\xC3\xB3n del archivo a descargar"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocNormalQuality, Type = String, Dynamic = True, Default = \"NormalQuality", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"NormalQuality"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"NormalCalidad"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocNote, Type = String, Dynamic = True, Default = \"Note", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"Note"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Nota"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocResolution, Type = String, Dynamic = True, Default = \"Resolution", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"Resolution"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Resoluci\xC3\xB3n"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocType, Type = String, Dynamic = True, Default = \"Type", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"Type"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Tipo"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocWorstQuality, Type = String, Dynamic = True, Default = \"WorstQuality", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"WorstQuality"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"MenorCalidad"
+	#tag EndConstant
+
+
 #tag EndWindowCode
 
 #tag Events BevelButton1
 	#tag Event
 		Sub Action()
 		  If TextField1.Text= "" Then
-		    MsgBox "Escriba dirección del archivo a descargar"
+		    MsgBox kLocMsgWFAD
 		    TextField1.SetFocus
 		    Return
 		  End If
@@ -385,28 +435,28 @@ End
 	#tag Event
 		Sub Action()
 		  If Listbox1.ListCount= 0 Then
-		    MsgBox "cheqee resoluciones de video disponibles"
+		    MsgBox kLocMsgCVRA
 		    Return
 		  End If
 		  
 		  Dim fmtSel, fmtOut As String
 		  
-		  If ComboBox1.Text= "Normal" Then
+		  If ComboBox1.Text= kLocNormalQuality Then
 		    If Listbox1.ListIndex= -1 Then
-		      MsgBox "Seleccione resolucion a descargar"
+		      MsgBox kLocMsgSRD
 		      Return
 		    End If
 		    fmtSel= Listbox1.RowTag(Listbox1.ListIndex).StringValue
 		    fmtOut= """"+ VideosFolder.ShellPath+ "\%(title)s-%(id)s.%(ext)s"""
-		  ElseIf ComboBox1.Text= "MenorCalidad" Then
+		  ElseIf ComboBox1.Text= kLocWorstQuality Then
 		    fmtSel= "worstvideo+worstaudio"
 		    fmtOut= """"+ VideosFolder.ShellPath+ "\%(title)s-worst-%(id)s.%(ext)s"""
-		  ElseIf ComboBox1.Text= "MejorCalidad" Then
+		  ElseIf ComboBox1.Text= kLocBestQuality Then
 		    fmtSel= "bestvideo+bestaudio"
 		    fmtOut= """"+ VideosFolder.ShellPath+ "\%(title)s-best-%(id)s.%(ext)s"""
 		  End If
 		  
-		  PanelHistory.Listbox1.AddRow "Iniciando..."
+		  PanelHistory.Listbox1.AddRow kLocInit
 		  Dim idx As Integer= PanelHistory.Listbox1.LastIndex
 		  PanelHistory.Listbox1.RowTag(idx)= VideosFolder
 		  
@@ -430,7 +480,7 @@ End
 		    Timer1.Enabled= True
 		  End If
 		  
-		  'System.DebugLog CurrentMethodName+ " "+ cmd
+		  System.DebugLog CurrentMethodName+ " "+ cmd
 		End Sub
 	#tag EndEvent
 #tag EndEvents
