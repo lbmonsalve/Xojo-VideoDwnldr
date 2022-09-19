@@ -386,23 +386,19 @@ End
 		#Tag Instance, Platform = Mac OS, Language = Default, Definition  = \"ffmpeg.exe"
 	#tag EndConstant
 
-	#tag Constant, Name = kLocCompleted, Type = String, Dynamic = True, Default = \"Completado!", Scope = Public
+	#tag Constant, Name = kLocCompleted, Type = String, Dynamic = True, Default = \"Completed!", Scope = Public
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Completado!"
-		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"Completed"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocConfig, Type = String, Dynamic = True, Default = \"Configuration", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"Configuration"
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Configuraci\xC3\xB3n"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocDownload, Type = String, Dynamic = True, Default = \"Download", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"Download"
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Descarga"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocHistory, Type = String, Dynamic = True, Default = \"History", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"History"
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Historial"
 	#tag EndConstant
 

@@ -129,12 +129,10 @@ End
 	#tag EndConstant
 
 	#tag Constant, Name = kLocSave, Type = String, Dynamic = True, Default = \"Save", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"Save"
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Grabar"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocValue, Type = String, Dynamic = True, Default = \"Value", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = en, Definition  = \"Value"
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Valor"
 	#tag EndConstant
 
