@@ -262,7 +262,8 @@ End
 		Private Sub CmdDataAvailable(o As Cmd)
 		  If o.Idx= -1 Then Return
 		  
-		  Dim result As String= ReplaceLineEndings(ConvertEncoding(o.ReadAll, Encodings.UTF8), EndOfLine.Windows)
+		  // TODO: linux, mac encodings
+		  Dim result As String= ReplaceLineEndings(ConvertEncoding(o.ReadAll.DefineEncoding(Encodings.WindowsANSI), Encodings.UTF8), EndOfLine.Windows)
 		  Dim results() As String= result.Split(EndOfLine.Windows)
 		  
 		  While results(0).Len= 0

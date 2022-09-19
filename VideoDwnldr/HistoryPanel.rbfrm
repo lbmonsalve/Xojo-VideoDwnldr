@@ -139,13 +139,14 @@ End
 		End Sub
 	#tag EndEvent
 	#tag Event
-		Function CellTextPaint(g As Graphics, row As Integer, column As Integer, x as Integer, y as Integer) As Boolean
-		  If row< Me.ListCount And column= 1 Then
+		Function CellBackgroundPaint(g As Graphics, row As Integer, column As Integer) As Boolean
+		  If row< Me.ListCount Then
 		    If Me.Cell(row, 1)= MainPanel.kLocCompleted Then
-		      g.ForeColor= &c00400000
+		      g.ForeColor= &cD9FFD900
 		    Else
-		      g.ForeColor= &c80000000
+		      g.ForeColor= &cFFFFCA00
 		    End If
+		    g.FillRect 0 ,0 ,g.width, g.height
 		  End If
 		End Function
 	#tag EndEvent
