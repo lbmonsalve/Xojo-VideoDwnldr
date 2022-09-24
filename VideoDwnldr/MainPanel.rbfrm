@@ -295,9 +295,16 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub DownloadVcredist()
+		Function DownloadVcredist() As Boolean
 		  #if TargetWin32
 		    Dim folderYoutubeDl As FolderItem= SpecialFolder.ApplicationData.Child(BrandName).Child(kYoutubedl)
+		    Dim fileMsvcp As FolderItem= folderYoutubeDl.Child("msvcp100.dll")
+		    Dim fileMsvcr As FolderItem= folderYoutubeDl.Child("msvcr100.dll")
+		    Dim chkFiles As Boolean= Not (fileMsvcp Is Nil) And Not (fileMsvcr Is Nil)
+		    
+		    If chkFiles And fileMsvcp.Exists And fileMsvcr.Exists Then
+		      Return False
+		    End If
 		    
 		    Dim dfv As New DownloadFile
 		    AddHandler dfv.Progress, WeakAddressOf dfProgress
@@ -319,8 +326,12 @@ End
 		      Timer1.Mode= Timer1.ModeMultiple
 		      Timer1.Enabled= True
 		    End If
+		    
+		    Return True
+		  #else
+		    Return False
 		  #endif
-		End Sub
+		End Function
 	#tag EndMethod
 
 

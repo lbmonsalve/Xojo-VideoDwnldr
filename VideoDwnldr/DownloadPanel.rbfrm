@@ -75,13 +75,13 @@ Begin ContainerControl DownloadPanel
       BackColor       =   &hFFFFFF
       Bold            =   ""
       Border          =   True
-      CueText         =   ""
+      CueText         =   "#kLocURL"
       DataField       =   ""
       DataSource      =   ""
       Enabled         =   True
       Format          =   ""
       Height          =   30
-      HelpTag         =   "#kLocURL"
+      HelpTag         =   ""
       Index           =   -2147483648
       Italic          =   ""
       Left            =   20
@@ -418,11 +418,12 @@ End
 		      Listbox1.RowTag(Listbox1.LastIndex)= code
 		    Next
 		  ElseIf ss.ErrorCode< -1 Then // download vcredist:
-		    PanelMain.DownloadVcredist
+		    If Not PanelMain.DownloadVcredist Then
+		      MsgBox "error! code:"+Str( ss.ErrorCode)
+		    End If
 		  Else
 		    MsgBox "error! code:"+Str( ss.ErrorCode)
 		  End If
-		  
 		End Sub
 	#tag EndEvent
 #tag EndEvents
