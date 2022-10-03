@@ -246,6 +246,20 @@ Begin ContainerControl DownloadPanel
       Visible         =   True
       Width           =   258
    End
+   Begin Shell YoutubeDlCmd
+      Arguments       =   ""
+      Backend         =   ""
+      Height          =   32
+      Index           =   -2147483648
+      Left            =   0
+      LockedInPosition=   False
+      Mode            =   2
+      Scope           =   0
+      TabPanelIndex   =   0
+      TimeOut         =   ""
+      Top             =   -30
+      Width           =   32
+   End
 End
 #tag EndWindow
 
@@ -390,40 +404,9 @@ End
 		    Return
 		  End If
 		  
-		  Dim cmd As String= YoutubeDlFile.ShellPath+ " -F "+ TextField1.Text
+		  BevelButton1.Enabled= False
 		  
-		  Dim ss As New Shell
-		  ss.TimeOut= 10000
-		  ss.Execute cmd
-		  
-		  If ss.ErrorCode= 0 Then
-		    Dim result As String= ReplaceLineEndings(ConvertEncoding(ss.Result, Encodings.UTF8), EndOfLine.Windows)
-		    Dim results() As String= result.Split(EndOfLine.Windows)
-		    
-		    Do
-		      results.Remove 0
-		    Loop Until results(0).Left(6)= "format"
-		    results.Remove 0
-		    If results(results.Ubound).Trim= "" Then results.Remove(results.Ubound)
-		    
-		    Listbox1.DeleteAllRows
-		    
-		    For Each line As String In results
-		      Dim code As String= line.Mid(1, 13).Trim
-		      Dim exte As String= line.Mid(14, 11).Trim
-		      Dim reso As String= line.Mid(25, 11).Trim
-		      Dim note As String= line.Mid(36).Trim
-		      
-		      Listbox1.AddRow exte, reso, note
-		      Listbox1.RowTag(Listbox1.LastIndex)= code
-		    Next
-		  ElseIf ss.ErrorCode< -1 Then // download vcredist:
-		    If Not PanelMain.DownloadVcredist Then
-		      MsgBox "error! code:"+Str( ss.ErrorCode)
-		    End If
-		  Else
-		    MsgBox "error! code:"+Str( ss.ErrorCode)
-		  End If
+		  YoutubeDlCmd.Execute YoutubeDlFile.ShellPath+ " -F "+ TextField1.Text
 		End Sub
 	#tag EndEvent
 #tag EndEvents
@@ -508,6 +491,54 @@ End
 		    Me.Mode= Timer.ModeOff
 		    'System.DebugLog CurrentMethodName+ " Me.Mode= Timer.ModeOff"
 		  End If
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events YoutubeDlCmd
+	#tag Event
+		Sub Completed()
+		  BevelButton1.Enabled= True
+		  
+		  If Me.ErrorCode< -1 Then
+		    If Not PanelMain.DownloadVcredist Then
+		      MsgBox "error! code:"+Str( Me.ErrorCode)
+		    End If
+		    Return
+		  End If
+		  
+		  Dim result As String= ReplaceLineEndings(ConvertEncoding(Me.Result, Encodings.UTF8), EndOfLine.Windows)
+		  Dim results() As String= result.Split(EndOfLine.Windows)
+		  System.DebugLog CurrentMethodName+ " "+ results(0)
+		  
+		  // chk for errors:
+		  For Each line As String In results
+		    If line.Lowercase.InStr("error")> 0 Then
+		      MsgBox line
+		      Return
+		    End If
+		  Next
+		  
+		  Try
+		    Do
+		      results.Remove 0
+		    Loop Until results(0).Left(6)= "format"
+		    results.Remove 0
+		    If results(results.Ubound).Trim= "" Then results.Remove(results.Ubound)
+		  Catch exc As OutOfBoundsException
+		    Return
+		  End Try
+		  
+		  Listbox1.DeleteAllRows
+		  
+		  For Each line As String In results
+		    Dim code As String= line.Mid(1, 13).Trim
+		    Dim exte As String= line.Mid(14, 11).Trim
+		    Dim reso As String= line.Mid(25, 11).Trim
+		    Dim note As String= line.Mid(36).Trim
+		    
+		    Listbox1.AddRow exte, reso, note
+		    Listbox1.RowTag(Listbox1.LastIndex)= code
+		  Next
 		End Sub
 	#tag EndEvent
 #tag EndEvents
