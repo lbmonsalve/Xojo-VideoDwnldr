@@ -142,7 +142,7 @@ Begin ContainerControl DownloadPanel
       LockTop         =   True
       RequiresSelection=   ""
       Scope           =   0
-      ScrollbarHorizontal=   ""
+      ScrollbarHorizontal=   True
       ScrollBarVertical=   True
       SelectionType   =   0
       TabIndex        =   2
@@ -321,6 +321,14 @@ End
 		  End If
 		End Sub
 	#tag EndMethod
+
+
+	#tag Note, Name = Readme
+		
+		https://youtu.be/AA9Ybq5in-c
+		https://www.youtube.com/watch?v=Xa2oMHABr7k
+		https://www.youtube.com/watch?v=Do2A5ZZrUNs
+	#tag EndNote
 
 
 	#tag Property, Flags = &h0

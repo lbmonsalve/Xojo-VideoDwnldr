@@ -59,16 +59,25 @@ End
 	#tag Event
 		Function CancelClose(appQuitting as Boolean) As Boolean
 		  If MainPanel1.DownloadFiles.Ubound> -1 Then
-		    MsgBox "Espere terminar descarga archivos soporte..."
+		    MsgBox kWaitToDownloadSupportFiles
 		    Return True
 		  End If
 		  
 		  If MainPanel1.DownloadPanel1.Cmds.Ubound> -1 Then
-		    MsgBox "Espere terminar descarga videos..."
+		    MsgBox kWaitToDownloadVideos
 		    Return True
 		  End If
 		End Function
 	#tag EndEvent
+
+
+	#tag Constant, Name = kWaitToDownloadSupportFiles, Type = String, Dynamic = True, Default = \"Wait to download support files...", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Espere terminar descarga archivos soporte..."
+	#tag EndConstant
+
+	#tag Constant, Name = kWaitToDownloadVideos, Type = String, Dynamic = True, Default = \"Wait to download video(s)...", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Espere terminar descarga video(s)..."
+	#tag EndConstant
 
 
 #tag EndWindowCode

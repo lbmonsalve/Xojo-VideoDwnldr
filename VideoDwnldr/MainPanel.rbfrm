@@ -174,6 +174,8 @@ End
 		  DownloadPanel1.FfmpegFile= FfmpegFile
 		  DownloadPanel1.VideosFolder= New FolderItem(json.Value(kVideos_folder).StringValue, FolderItem.PathTypeShell)
 		  
+		  HistoryPanel1.PanelMain= Self
+		  
 		  // set configPanel:
 		  If True Then
 		    Dim names() As String= json.Names
