@@ -59,23 +59,37 @@ End
 	#tag Event
 		Function CancelClose(appQuitting as Boolean) As Boolean
 		  If MainPanel1.DownloadFiles.Ubound> -1 Then
-		    MsgBox kWaitToDownloadSupportFiles
+		    MsgBox kLocWaitToDownloadSupportFiles
 		    Return True
 		  End If
 		  
 		  If MainPanel1.DownloadPanel1.Cmds.Ubound> -1 Then
-		    MsgBox kWaitToDownloadVideos
+		    MsgBox kLocWaitToDownloadVideos
 		    Return True
 		  End If
 		End Function
 	#tag EndEvent
 
 
-	#tag Constant, Name = kWaitToDownloadSupportFiles, Type = String, Dynamic = True, Default = \"Wait to download support files...", Scope = Public
+	#tag MenuHandler
+		Function HelpAbout() As Boolean Handles HelpAbout.Action
+			MsgBox kLocAbout+ App.ShortVersion
+			
+			Return True
+			
+		End Function
+	#tag EndMenuHandler
+
+
+	#tag Constant, Name = kLocAbout, Type = String, Dynamic = True, Default = \"VideoDownldr \xC2\xA92023\r\rVersion: ", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"VideoDownldr \xC2\xA92023\r\n\r\nVersi\xC3\xB3n: "
+	#tag EndConstant
+
+	#tag Constant, Name = kLocWaitToDownloadSupportFiles, Type = String, Dynamic = True, Default = \"Wait to download support files...", Scope = Public
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Espere terminar descarga archivos soporte..."
 	#tag EndConstant
 
-	#tag Constant, Name = kWaitToDownloadVideos, Type = String, Dynamic = True, Default = \"Wait to download video(s)...", Scope = Public
+	#tag Constant, Name = kLocWaitToDownloadVideos, Type = String, Dynamic = True, Default = \"Wait to download video(s)...", Scope = Public
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Espere terminar descarga video(s)..."
 	#tag EndConstant
 

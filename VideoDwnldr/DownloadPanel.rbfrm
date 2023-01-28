@@ -277,7 +277,9 @@ End
 		  If o.Idx= -1 Then Return
 		  
 		  // TODO: linux, mac encodings
-		  Dim result As String= ReplaceLineEndings(ConvertEncoding(o.ReadAll.DefineEncoding(Encodings.WindowsANSI), Encodings.UTF8), EndOfLine.Windows)
+		  Dim res As String= o.ReadAll
+		  'Dim result As String= ReplaceLineEndings(ConvertEncoding(res.DefineEncoding(Encodings.WindowsANSI), Encodings.UTF8), EndOfLine.Windows)
+		  Dim result As String= ReplaceLineEndings(res.DefineEncoding(Encodings.UTF8), EndOfLine.Windows)
 		  Dim results() As String= result.Split(EndOfLine.Windows)
 		  
 		  While results(0).Len= 0
@@ -448,6 +450,7 @@ End
 		  PanelHistory.Listbox1.RowTag(idx)= VideosFolder
 		  
 		  Dim cmd As String= YoutubeDlFile.ShellPath+ _
+		  " --encoding utf-8"+ _
 		  " -f "+ fmtSel+ _
 		  " --ffmpeg-location "+ FfmpegFile.ShellPath+ _
 		  " -o "+ fmtOut+ _

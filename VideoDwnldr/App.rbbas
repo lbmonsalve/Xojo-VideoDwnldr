@@ -42,6 +42,14 @@ Inherits Application
 		#Tag Instance, Platform = Mac OS, Language = Default, Definition  = \"Ctrl+Q"
 	#tag EndConstant
 
+	#tag Constant, Name = kHelp, Type = String, Dynamic = True, Default = \"Help", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Ayuda"
+	#tag EndConstant
+
+	#tag Constant, Name = kHelpAbout, Type = String, Dynamic = True, Default = \"About...", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Acerca de..."
+	#tag EndConstant
+
 
 	#tag ViewBehavior
 	#tag EndViewBehavior

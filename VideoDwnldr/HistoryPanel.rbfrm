@@ -122,7 +122,7 @@ Begin ContainerControl HistoryPanel
       Bevel           =   0
       Bold            =   False
       ButtonType      =   0
-      Caption         =   "#kMerge"
+      Caption         =   "#kLocMerge"
       CaptionAlign    =   3
       CaptionDelta    =   0
       CaptionPlacement=   1
@@ -172,24 +172,26 @@ End
 
 	#tag Method, Flags = &h21
 		Private Function FindFile(name As String) As FolderItem
-		  Dim folder As FolderItem= PanelMain.DownloadPanel1.VideosFolder
-		  
 		  If name.InStr(kSep)> 0 Then
 		    Dim fNames() As String= name.Split(kSep)
 		    name= fNames(fNames.Ubound)
 		  End If
-		  Dim nameWords() As String= name.Split(" ")
+		  Return PanelMain.DownloadPanel1.VideosFolder.Child(name)
 		  
-		  For i As Integer= 1 To folder.Count
-		    Dim file As FolderItem= folder.Item(i)
-		    If file.Directory Then Continue
-		    
-		    Dim fileName As String= file.Name
-		    Dim fileNameWords() As String= fileName.Split(" ")
-		    If nameWords.AreSameAs(fileNameWords) Then Return file
-		  Next
-		  
-		  Return folder
+		  'Dim folder As FolderItem= PanelMain.DownloadPanel1.VideosFolder
+		  ''Dim nameWords() As String= name.Split(" ")
+		  '
+		  'For i As Integer= 1 To folder.Count
+		  'Dim file As FolderItem= folder.Item(i)
+		  'If file.Directory Then Continue
+		  '
+		  'Dim fileName As String= file.Name
+		  'If fileName= name Then Return file
+		  ''Dim fileNameWords() As String= fileName.Split(" ")
+		  ''If nameWords.AreSameAs(fileNameWords) Then Return file
+		  'Next
+		  '
+		  'Return folder
 		End Function
 	#tag EndMethod
 
@@ -203,15 +205,15 @@ End
 	#tag EndProperty
 
 
-	#tag Constant, Name = kMerge, Type = String, Dynamic = True, Default = \"Merge", Scope = Private
+	#tag Constant, Name = kLocMerge, Type = String, Dynamic = True, Default = \"Merge", Scope = Private
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Mezcla"
 	#tag EndConstant
 
-	#tag Constant, Name = kMergeIsRunning, Type = String, Dynamic = True, Default = \"Merge is running", Scope = Private
+	#tag Constant, Name = kLocMergeIsRunning, Type = String, Dynamic = True, Default = \"Merge is running", Scope = Private
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Procesando mezcla"
 	#tag EndConstant
 
-	#tag Constant, Name = kMustBeSelectedTwoFiles, Type = String, Dynamic = True, Default = \"Must be selected two files (Shift+Click)", Scope = Private
+	#tag Constant, Name = kLocMustBeSelectedTwoFiles, Type = String, Dynamic = True, Default = \"Must be selected two files (Shift+Click)", Scope = Private
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Debe seleccionar dos archivos (Shift+Clic)"
 	#tag EndConstant
 
@@ -265,17 +267,17 @@ End
 	#tag Event
 		Sub Action()
 		  If Listbox1.ListCount= 0 Then
-		    MsgBox kMustBeSelectedTwoFiles
+		    MsgBox kLocMustBeSelectedTwoFiles
 		    Return
 		  End If
 		  
 		  Dim inputFileNames() As String
 		  For i As Integer= 0 To Listbox1.ListCount- 1
-		    If Listbox1.Selected(i) Then inputFileNames.Append Listbox1.Cell(i, 0).DefineEncoding(Encodings.WindowsANSI)
+		    If Listbox1.Selected(i) Then inputFileNames.Append Listbox1.Cell(i, 0)
 		  Next
 		  
 		  If inputFileNames.Ubound<> 1 Then
-		    MsgBox kMustBeSelectedTwoFiles
+		    MsgBox kLocMustBeSelectedTwoFiles
 		    Return
 		  End If
 		  
@@ -296,7 +298,7 @@ End
 		    AddHandler mCmd.Completed, WeakAddressOf CmdCompleted
 		  End If
 		  If mCmd.IsRunning Then
-		    MsgBox kMergeIsRunning
+		    MsgBox kLocMergeIsRunning
 		    Return
 		  End If
 		  
