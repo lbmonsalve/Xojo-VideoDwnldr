@@ -181,8 +181,6 @@ End
 		    mTestFile.Start
 		  End If
 		  
-		  'Dim t2 As VideoDl.IFileDownloader= New MockFileDownloader
-		  
 		  'Break
 		End Sub
 	#tag EndEvent

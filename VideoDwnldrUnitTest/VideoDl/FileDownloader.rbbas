@@ -63,6 +63,8 @@ Implements IFileDownloader
 	#tag Method, Flags = &h21
 		Private Sub Destructor()
 		  Close
+		  
+		  System.DebugLog CurrentMethodName
 		End Sub
 	#tag EndMethod
 

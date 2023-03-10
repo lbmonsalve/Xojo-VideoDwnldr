@@ -4,6 +4,52 @@ Implements VideoDl.IFileDownloader
 	#tag Method, Flags = &h0
 		Sub Constructor(file As FolderItem)
 		  mFile= file
+		  
+		  mProcess= New Timer
+		  mProcess.Period= 1
+		  mProcess.Enabled= False
+		  mProcess.Mode= Timer.ModeOff
+		  AddHandler mProcess.Action, WeakAddressOf HandlerProcessAction
+		  
+		  mRnd= New Random
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub Destructor()
+		  mProcess.Mode= Timer.ModeOff
+		  RemoveHandler mProcess.Action, WeakAddressOf HandlerProcessAction
+		  
+		  System.DebugLog CurrentMethodName
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub HandlerProcessAction(o As Timer)
+		  If mFile Is Nil Then
+		    o.Mode= Timer.ModeOff
+		    Return
+		  End If
+		  
+		  Dim bytesTotal As Uint64= mFile.Length
+		  Dim bytesNow As UInt64
+		  
+		  For i As Integer= 1 To 10
+		    // fake work:
+		    Dim waitTicks As Integer= Ticks+ mRnd.InRange(5, 20)
+		    While waitTicks> Ticks
+		    Wend
+		    // fake work:
+		    
+		    bytesNow= (i* bytesTotal)/ 10
+		    If Not (mActionProgress Is Nil) Then mActionProgress.Invoke(bytesTotal, bytesNow)
+		    'System.DebugLog Str(waitTicks)
+		  Next
+		  
+		  If Not (mActionCompleted Is Nil) Then mActionCompleted.Invoke(mFile)
+		  'System.DebugLog "completed!"
+		  
+		  o.Mode= Timer.ModeOff
 		End Sub
 	#tag EndMethod
 
@@ -27,17 +73,8 @@ Implements VideoDl.IFileDownloader
 		Sub Start()
 		  // Parte de la interfaz VideoDl.IFileDownloader.
 		  
-		  If mFile Is Nil Then Return
-		  
-		  Dim bytesTotal As Uint64= mFile.Length
-		  Dim bytesNow As UInt64
-		  
-		  For i As Integer= 1 To 10
-		    bytesNow= (i* bytesTotal)/ 10
-		    If Not (mActionProgress Is Nil) Then mActionProgress.Invoke(bytesTotal, bytesNow)
-		  Next
-		  
-		  If Not (mActionCompleted Is Nil) Then mActionCompleted.Invoke(mFile)
+		  mProcess.Mode= Timer.ModeSingle
+		  mProcess.Enabled= True
 		End Sub
 	#tag EndMethod
 
@@ -52,6 +89,14 @@ Implements VideoDl.IFileDownloader
 
 	#tag Property, Flags = &h21
 		Private mFile As FolderItem
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mProcess As Timer
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mRnd As Random
 	#tag EndProperty
 
 
