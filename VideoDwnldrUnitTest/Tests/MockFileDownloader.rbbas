@@ -1,6 +1,6 @@
 #tag Class
 Protected Class MockFileDownloader
-Implements VideoDl.IFileDownloader
+Implements VideoDl.IFile
 	#tag Method, Flags = &h0
 		Sub Constructor(file As FolderItem)
 		  mFile= file
@@ -42,7 +42,7 @@ Implements VideoDl.IFileDownloader
 		    // fake work:
 		    
 		    bytesNow= (i* bytesTotal)/ 10
-		    If Not (mActionProgress Is Nil) Then mActionProgress.Invoke(bytesTotal, bytesNow)
+		    If Not (mActionProgress Is Nil) Then mActionProgress.Invoke(bytesTotal, bytesNow, "")
 		    System.DebugLog Str(waitTicks)
 		  Next
 		  
@@ -55,7 +55,7 @@ Implements VideoDl.IFileDownloader
 
 	#tag Method, Flags = &h0
 		Sub SetCompletedAction(action As VideoDl.ActionCompleted)
-		  // Parte de la interfaz VideoDl.IFileDownloader.
+		  // Parte de la interfaz VideoDl.IFile.
 		  
 		  mActionCompleted= action
 		End Sub
@@ -63,7 +63,7 @@ Implements VideoDl.IFileDownloader
 
 	#tag Method, Flags = &h0
 		Sub SetProgressAction(action As VideoDl.ActionProgress)
-		  // Parte de la interfaz VideoDl.IFileDownloader.
+		  // Parte de la interfaz VideoDl.IFile.
 		  
 		  mActionProgress= action
 		End Sub
@@ -71,7 +71,7 @@ Implements VideoDl.IFileDownloader
 
 	#tag Method, Flags = &h0
 		Sub Start()
-		  // Parte de la interfaz VideoDl.IFileDownloader.
+		  // Parte de la interfaz VideoDl.IFile.
 		  
 		  mProcess.Mode= Timer.ModeSingle
 		  mProcess.Enabled= True

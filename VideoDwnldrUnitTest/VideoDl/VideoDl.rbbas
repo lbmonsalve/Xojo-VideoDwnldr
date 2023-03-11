@@ -1,11 +1,15 @@
 #tag Module
 Protected Module VideoDl
 	#tag DelegateDeclaration, Flags = &h0
+		Delegate Sub ActionAssets(assets() As VideoDl.IAsset)
+	#tag EndDelegateDeclaration
+
+	#tag DelegateDeclaration, Flags = &h0
 		Delegate Sub ActionCompleted(fileTemp As FolderItem)
 	#tag EndDelegateDeclaration
 
 	#tag DelegateDeclaration, Flags = &h0
-		Delegate Sub ActionProgress(bytesTotal As Uint64, bytesNow As Uint64)
+		Delegate Sub ActionProgress(bytesTotal As Uint64, bytesNow As Uint64, msg As String)
 	#tag EndDelegateDeclaration
 
 	#tag Method, Flags = &h21

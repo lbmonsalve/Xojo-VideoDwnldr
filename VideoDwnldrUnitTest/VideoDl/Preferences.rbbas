@@ -19,9 +19,14 @@ Protected Class Preferences
 		  json.Value(kUrl_ffmpeg)= kUrl_ffmpeg_value
 		  json.Value(kVideos_folder)= SpecialFolder.Movies.AbsoluteNativePath
 		  
-		  Dim tos As TextOutputStream= TextOutputStream.Create(f)
-		  tos.Write json.ToString
-		  tos.Close
+		  json.Save f
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Delete(folder As Boolean = True, file As Boolean = True)
+		  If file Then Self.File.Delete
+		  If folder Then Self.File.Parent.Delete
 		End Sub
 	#tag EndMethod
 

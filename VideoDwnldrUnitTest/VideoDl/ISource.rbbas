@@ -1,13 +1,7 @@
 #tag Interface
-Protected Interface IFileDownloader
+Protected Interface ISource
 	#tag Method, Flags = &h0
-		Sub SetCompletedAction(action As VideoDl.ActionCompleted)
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub SetProgressAction(action As VideoDl.ActionProgress)
+		Sub SetAssetsAction(action As VideoDl.ActionAssets)
 		  
 		End Sub
 	#tag EndMethod

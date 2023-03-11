@@ -119,7 +119,7 @@ End
 #tag WindowCode
 	#tag Event
 		Function CancelClose(appQuitting as Boolean) As Boolean
-		  For Each file As VideoDl.IFileDownloader In mDownloadFiles
+		  For Each file As VideoDl.IFile In mDownloadFiles
 		    file= Nil
 		  Next
 		  
@@ -164,16 +164,22 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Sub DownloadProgress(bytesTotal As Uint64, bytesNow As Uint64)
+		Private Sub DownloadProgress(bytesTotal As Uint64, bytesNow As Uint64, msg As String)
 		  Dim perc As String= " ("+ Str(bytesNow* 100/ bytesTotal, "###")+ "%)"
 		  
 		  System.DebugLog Str(bytesNow)+ "bytes de "+ Str(bytesTotal)+ perc
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h21
+		Private Sub HandlerAssets(assets() As VideoDl.IAsset)
+		  Break
+		End Sub
+	#tag EndMethod
+
 
 	#tag Property, Flags = &h21
-		Private mDownloadFiles() As VideoDl.IFileDownloader
+		Private mDownloadFiles() As VideoDl.IFile
 	#tag EndProperty
 
 
@@ -182,27 +188,40 @@ End
 #tag Events PushButton1
 	#tag Event
 		Sub Action()
-		  Dim pfile As New VideoDl.Preferences
-		  Dim json As JSONData= pFile.File.OpenAsJSONData
+		  VideoDl.Youtube.Executable= SpecialFolder.Documents.Child("Temp").Child("youtube-dl.exe")
+		  Dim yt As New VideoDl.Youtube("https://www.youtube.com/watch?v=Xa2oMHABr7k")
+		  Dim s1 As String= yt.VersionExecutable
+		  If s1<> VideoDl.Youtube.VersionExpected Then
+		    Break
+		  End If
+		  
+		  'Dim mgr As New VideoDl.Manager(yt)
+		  'mgr.Assets WeakAddressOf handlerAssets
 		  Break
+		  
+		  
+		  'Dim pfile As New VideoDl.Preferences
+		  'Dim json As JSONData= pFile.File.OpenAsJSONData
+		  'Break
+		  
 		  
 		  'Const kUrlYoutubeDl= "https://www.dropbox.com/s/ibq3eq8cy2hp584/youtube-dl.exe?dl=1"
 		  'Const kUrlFFmpeg= "https://www.dropbox.com/s/ue2z3b7q7372mgs/ffmpeg-win-2.2.2.zip?dl=1"
 		  'Const kUrlVcredist= "https://www.dropbox.com/s/p978euou1auz4vy/vcredist_100.zip?dl=1"
 		  '
-		  'Dim youtubeFile As VideoDl.IFileDownloader= New VideoDl.FileDownloaderYoutubeDl(kUrlYoutubeDl, SpecialFolder.Documents)
+		  'Dim youtubeFile As VideoDl.IFile= New VideoDl.FileDownloaderYoutubeDl(kUrlYoutubeDl, SpecialFolder.Documents)
 		  'youtubeFile.SetProgressAction(WeakAddressOf DownloadProgress)
 		  'youtubeFile.SetCompletedAction(WeakAddressOf DownloadCompleted)
 		  'youtubeFile.Start
 		  'mDownloadFiles.Append youtubeFile
 		  '
-		  'Dim ffmpegFile As VideoDl.IFileDownloader= New VideoDl.FileDownloaderFFmpeg(kUrlFFmpeg, SpecialFolder.Documents)
+		  'Dim ffmpegFile As VideoDl.IFile= New VideoDl.FileDownloaderFFmpeg(kUrlFFmpeg, SpecialFolder.Documents)
 		  'ffmpegFile.SetProgressAction(WeakAddressOf DownloadProgress)
 		  'ffmpegFile.SetCompletedAction(WeakAddressOf DownloadCompleted)
 		  'ffmpegFile.Start
 		  'mDownloadFiles.Append ffmpegFile
 		  '
-		  'Dim vcredistFile As VideoDl.IFileDownloader= New VideoDl.FileDownloaderVcredist(kUrlVcredist, SpecialFolder.Documents)
+		  'Dim vcredistFile As VideoDl.IFile= New VideoDl.FileDownloaderVcredist(kUrlVcredist, SpecialFolder.Documents)
 		  'vcredistFile.SetProgressAction(WeakAddressOf DownloadProgress)
 		  'vcredistFile.SetCompletedAction(WeakAddressOf DownloadCompleted)
 		  'vcredistFile.Start

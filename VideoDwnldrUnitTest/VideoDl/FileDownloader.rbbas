@@ -1,6 +1,6 @@
 #tag Class
 Protected Class FileDownloader
-Implements IFileDownloader
+Implements IFile
 	#tag Method, Flags = &h21
 		Private Sub ClientError(o As libcURL.cURLClient, errorCode As Integer)
 		  mErrorCode= errorCode
@@ -22,7 +22,7 @@ Implements IFileDownloader
 		  
 		  RaiseEvent Progress(dlTotal, dlNow)
 		  
-		  If Not (mActionProgress Is Nil) Then mActionProgress.Invoke(dlTotal, dlNow)
+		  If Not (mActionProgress Is Nil) Then mActionProgress.Invoke(dlTotal, dlNow, "")
 		  
 		End Function
 	#tag EndMethod

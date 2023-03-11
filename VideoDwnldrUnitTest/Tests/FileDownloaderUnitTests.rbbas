@@ -5,7 +5,7 @@ Inherits TestGroup
 		Sub FileMockDownloaderTest()
 		  Dim file As FolderItem= FindFile("cacert-2022-07-19.pem", "ca-cert")
 		  
-		  Dim mockFile As VideoDl.IFileDownloader= New MockFileDownloader(file)
+		  Dim mockFile As VideoDl.IFile= New MockFileDownloader(file)
 		  mockFile.SetProgressAction(WeakAddressOf MockProgress)
 		  mockFile.SetCompletedAction(WeakAddressOf MockCompleted)
 		  mockFile.Start
@@ -47,7 +47,7 @@ Inherits TestGroup
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Sub MockProgress(bytesTotal As Uint64, bytesNow As Uint64)
+		Private Sub MockProgress(bytesTotal As Uint64, bytesNow As Uint64, msg As String)
 		  Dim perc As String= " ("+ Str(bytesNow* 100/ bytesTotal, "###")+ "%)"
 		  
 		  Assert.Message Str(bytesNow)+ "bytes de "+ Str(bytesTotal)+ perc
@@ -56,7 +56,7 @@ Inherits TestGroup
 
 
 	#tag Property, Flags = &h21
-		Private Shared mDownloadFiles() As VideoDl.IFileDownloader
+		Private Shared mDownloadFiles() As VideoDl.IFile
 	#tag EndProperty
 
 

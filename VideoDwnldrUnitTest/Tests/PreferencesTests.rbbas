@@ -12,6 +12,32 @@ Inherits TestGroup
 		  Assert.IsTrue json.HasName(VideoDl.Preferences.kUrl_ffmpeg), "IsTrue json.HasName(VideoDl.Preferences.kUrl_ffmpeg)"
 		  Assert.IsTrue json.HasName(VideoDl.Preferences.kUrl_youtube_dl), "IsTrue json.HasName(VideoDl.Preferences.kUrl_youtube_dl)"
 		  Assert.IsTrue json.HasName(VideoDl.Preferences.kVideos_folder), "IsTrue json.HasName(VideoDl.Preferences.kVideos_folder)"
+		  
+		  preferences= New VideoDl.Preferences("test", "test.json")
+		  Assert.IsNotNil preferences.File, "IsNotNil preferences.File"
+		  Assert.IsTrue preferences.File.Exists, "IsTrue preferences.File.Exists"
+		  Assert.AreSame "test", preferences.File.Parent.Name, "AreSame ""test"", preferences.File.Parent.Name"
+		  Assert.AreSame "test.json", preferences.File.Name, "AreSame ""test.json"", preferences.File.Name"
+		  
+		  json= preferences.File.OpenAsJSONData
+		  Assert.IsTrue json.HasName(VideoDl.Preferences.kUrl_ffmpeg), "IsTrue json.HasName(VideoDl.Preferences.kUrl_ffmpeg)"
+		  Assert.IsTrue json.HasName(VideoDl.Preferences.kUrl_youtube_dl), "IsTrue json.HasName(VideoDl.Preferences.kUrl_youtube_dl)"
+		  Assert.IsTrue json.HasName(VideoDl.Preferences.kVideos_folder), "IsTrue json.HasName(VideoDl.Preferences.kVideos_folder)"
+		  
+		  json.Value(VideoDl.Preferences.kUrl_ffmpeg)= "test1"
+		  json.Value(VideoDl.Preferences.kUrl_youtube_dl)= "test2"
+		  json.Value(VideoDl.Preferences.kVideos_folder)= "test3"
+		  json.Save preferences.File
+		  
+		  preferences= New VideoDl.Preferences("test", "test.json")
+		  json= preferences.File.OpenAsJSONData
+		  Assert.AreSame "test1", json.Value(VideoDl.Preferences.kUrl_ffmpeg).StringValue, "AreSame ""test1"", json.Value(VideoDl.Preferences.kUrl_ffmpeg).StringValue"
+		  Assert.AreSame "test2", json.Value(VideoDl.Preferences.kUrl_youtube_dl).StringValue, "AreSame ""test1"", json.Value(VideoDl.Preferences.kUrl_youtube_dl).StringValue"
+		  Assert.AreSame "test3", json.Value(VideoDl.Preferences.kVideos_folder).StringValue, "AreSame ""test1"", json.Value(VideoDl.Preferences.kVideos_folder).StringValue"
+		  
+		  preferences.Delete
+		  Assert.IsFalse preferences.File.Exists, "IsFalse preferences.File.Exists"
+		  Assert.IsFalse preferences.File.Parent.Exists, "IsFalse preferences.File.Parent.Exists"
 		End Sub
 	#tag EndMethod
 
