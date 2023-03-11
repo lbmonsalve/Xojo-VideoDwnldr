@@ -36,18 +36,18 @@ Implements VideoDl.IFileDownloader
 		  
 		  For i As Integer= 1 To 10
 		    // fake work:
-		    Dim waitTicks As Integer= Ticks+ mRnd.InRange(5, 20)
+		    Dim waitTicks As Integer= Ticks+ mRnd.InRange(1, 20)
 		    While waitTicks> Ticks
 		    Wend
 		    // fake work:
 		    
 		    bytesNow= (i* bytesTotal)/ 10
 		    If Not (mActionProgress Is Nil) Then mActionProgress.Invoke(bytesTotal, bytesNow)
-		    'System.DebugLog Str(waitTicks)
+		    System.DebugLog Str(waitTicks)
 		  Next
 		  
 		  If Not (mActionCompleted Is Nil) Then mActionCompleted.Invoke(mFile)
-		  'System.DebugLog "completed!"
+		  System.DebugLog "completed!"
 		  
 		  o.Mode= Timer.ModeOff
 		End Sub

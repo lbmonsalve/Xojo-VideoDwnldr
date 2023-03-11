@@ -1,9 +1,15 @@
 #tag Class
-Protected Class FileDownloaderYoutubeDl
+Protected Class FileDownloaderVcredist
 Inherits VideoDl.FileDownloader
 	#tag Event
 		Sub Completed(fileTemp As FolderItem)
-		  If Not (FolderToCopy Is Nil) Then fileTemp.CopyFileTo FolderToCopy.Child(kYoutubeDlFileName)
+		  If FolderToCopy Is Nil Then Return
+		  
+		  Try
+		    Call PKZip.ReadZip(fileTemp, FolderToCopy)
+		  Catch e As RuntimeException
+		    System.DebugLog CurrentMethodName+ " e.Message: "+ e.Message
+		  End Try
 		End Sub
 	#tag EndEvent
 

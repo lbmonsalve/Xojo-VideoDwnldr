@@ -1,63 +1,19 @@
 #tag Class
-Protected Class FileDownloaderUnitTests
+Protected Class PreferencesTests
 Inherits TestGroup
 	#tag Method, Flags = &h0
-		Sub FileMockDownloaderTest()
-		  Dim file As FolderItem= FindFile("cacert-2022-07-19.pem", "ca-cert")
+		Sub DefaultTest()
+		  Dim preferences As New VideoDl.Preferences
+		  Assert.IsNotNil preferences, "IsNotNil preferences"
+		  Assert.IsNotNil preferences.File, "IsNotNil preferences.File"
+		  Assert.IsTrue preferences.File.Exists, "IsTrue preferences.File.Exists"
 		  
-		  Dim mockFile As VideoDl.IFileDownloader= New MockFileDownloader(file)
-		  mockFile.SetProgressAction(WeakAddressOf MockProgress)
-		  mockFile.SetCompletedAction(WeakAddressOf MockCompleted)
-		  mockFile.Start
-		  mDownloadFiles.Append mockFile
-		  
-		  Assert.Message "ini"
-		  'AsyncAwait 20
+		  Dim json As JSONData= preferences.File.OpenAsJSONData
+		  Assert.IsTrue json.HasName(VideoDl.Preferences.kUrl_ffmpeg), "IsTrue json.HasName(VideoDl.Preferences.kUrl_ffmpeg)"
+		  Assert.IsTrue json.HasName(VideoDl.Preferences.kUrl_youtube_dl), "IsTrue json.HasName(VideoDl.Preferences.kUrl_youtube_dl)"
+		  Assert.IsTrue json.HasName(VideoDl.Preferences.kVideos_folder), "IsTrue json.HasName(VideoDl.Preferences.kVideos_folder)"
 		End Sub
 	#tag EndMethod
-
-	#tag Method, Flags = &h21
-		Private Function FindFile(fileName As String, folderName As String = "") As FolderItem
-		  Dim parent As FolderItem = app.ExecutableFile.Parent
-		  
-		  While parent<>Nil
-		    
-		    Dim file As FolderItem
-		    If folderName= "" Then
-		      file = parent.Child(fileName)
-		    Else
-		      file = parent.Child(folderName).Child(fileName)
-		    End If
-		    
-		    If file<>Nil And file.Exists Then
-		      Return file
-		    End If
-		    
-		    parent = parent.Parent
-		  Wend
-		  
-		  Return Nil
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h21
-		Private Sub MockCompleted(fileTemp As FolderItem)
-		  Assert.Pass fileTemp.Name+ " completed!"
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h21
-		Private Sub MockProgress(bytesTotal As Uint64, bytesNow As Uint64)
-		  Dim perc As String= " ("+ Str(bytesNow* 100/ bytesTotal, "###")+ "%)"
-		  
-		  Assert.Message Str(bytesNow)+ "bytes de "+ Str(bytesTotal)+ perc
-		End Sub
-	#tag EndMethod
-
-
-	#tag Property, Flags = &h21
-		Private Shared mDownloadFiles() As VideoDl.IFileDownloader
-	#tag EndProperty
 
 
 	#tag ViewBehavior

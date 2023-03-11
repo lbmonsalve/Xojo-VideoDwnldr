@@ -3,15 +3,15 @@ Protected Class FileDownloaderFFmpeg
 Inherits VideoDl.FileDownloader
 	#tag Event
 		Sub Completed(fileTemp As FolderItem)
-		  If mFolderToCopy Is Nil Then Return
+		  If FolderToCopy Is Nil Then Return
 		  
 		  Try
-		    Dim files() As FolderItem= PKZip.ReadZip(fileTemp, mFolderToCopy)
+		    Dim files() As FolderItem= PKZip.ReadZip(fileTemp, FolderToCopy)
 		    
 		    For i As Integer= 0 To files.Ubound // rename folder:
 		      Dim file As FolderItem= files(i)
 		      If file.Directory And file.Name.InStr("ffmpeg-")> 0 Then
-		        Dim ffmpegFolder As FolderItem= mFolderToCopy.Child(kFfmpegFolderName)
+		        Dim ffmpegFolder As FolderItem= FolderToCopy.Child(kFfmpegFolderName)
 		        If ffmpegFolder.Exists Then ffmpegFolder.Name= GetName(ffmpegFolder, kFfmpegFolderName)
 		        
 		        file.Name= kFfmpegFolderName
@@ -23,21 +23,6 @@ Inherits VideoDl.FileDownloader
 		  End Try
 		End Sub
 	#tag EndEvent
-
-
-	#tag Method, Flags = &h1000
-		Sub Constructor(path As String, folderToCopy As FolderItem)
-		  // Calling the overridden superclass constructor.
-		  Super.Constructor(path)
-		  
-		  If Not (folderToCopy Is Nil) And folderToCopy.Directory Then mFolderToCopy= folderToCopy
-		End Sub
-	#tag EndMethod
-
-
-	#tag Property, Flags = &h21
-		Private mFolderToCopy As FolderItem
-	#tag EndProperty
 
 
 	#tag ViewBehavior

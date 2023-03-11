@@ -60,12 +60,26 @@ Implements IFileDownloader
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h1000
+		Sub Constructor(path As String, folderToCopy As FolderItem)
+		  Constructor(path)
+		  
+		  If Not (folderToCopy Is Nil) And folderToCopy.Directory Then mFolderToCopy= folderToCopy
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h21
 		Private Sub Destructor()
 		  Close
 		  
 		  System.DebugLog CurrentMethodName
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Function FolderToCopy() As FolderItem
+		  Return mFolderToCopy
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -84,6 +98,14 @@ Implements IFileDownloader
 		Sub Start()
 		  mClient.Get mPath, mTmpBs
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function TransferComplete() As Boolean
+		  If mClient Is Nil Then Return False
+		  
+		  Return mClient.IsTransferComplete
+		End Function
 	#tag EndMethod
 
 
@@ -114,6 +136,10 @@ Implements IFileDownloader
 
 	#tag Property, Flags = &h21
 		Private mErrorCode As Integer
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mFolderToCopy As FolderItem
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
