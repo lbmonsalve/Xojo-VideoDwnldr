@@ -190,14 +190,14 @@ End
 		Sub Action()
 		  VideoDl.Youtube.Executable= SpecialFolder.Documents.Child("Temp").Child("youtube-dl.exe")
 		  Dim yt As New VideoDl.Youtube("https://www.youtube.com/watch?v=Xa2oMHABr7k")
-		  Dim s1 As String= yt.VersionExecutable
-		  If s1<> VideoDl.Youtube.VersionExpected Then
-		    Break
-		  End If
+		  'Dim s1 As String= yt.VersionExecutable
+		  'If s1<> VideoDl.Youtube.VersionExpected Then
+		  'Break
+		  'End If
 		  
-		  'Dim mgr As New VideoDl.Manager(yt)
-		  'mgr.Assets WeakAddressOf handlerAssets
-		  Break
+		  Dim mgr As New VideoDl.Manager(yt)
+		  mgr.Assets WeakAddressOf handlerAssets
+		  'Break
 		  
 		  
 		  'Dim pfile As New VideoDl.Preferences
@@ -210,21 +210,15 @@ End
 		  'Const kUrlVcredist= "https://www.dropbox.com/s/p978euou1auz4vy/vcredist_100.zip?dl=1"
 		  '
 		  'Dim youtubeFile As VideoDl.IFile= New VideoDl.FileDownloaderYoutubeDl(kUrlYoutubeDl, SpecialFolder.Documents)
-		  'youtubeFile.SetProgressAction(WeakAddressOf DownloadProgress)
-		  'youtubeFile.SetCompletedAction(WeakAddressOf DownloadCompleted)
-		  'youtubeFile.Start
+		  'youtubeFile.GetFile WeakAddressOf DownloadCompleted, WeakAddressOf DownloadProgress
 		  'mDownloadFiles.Append youtubeFile
 		  '
 		  'Dim ffmpegFile As VideoDl.IFile= New VideoDl.FileDownloaderFFmpeg(kUrlFFmpeg, SpecialFolder.Documents)
-		  'ffmpegFile.SetProgressAction(WeakAddressOf DownloadProgress)
-		  'ffmpegFile.SetCompletedAction(WeakAddressOf DownloadCompleted)
-		  'ffmpegFile.Start
+		  'ffmpegFile.GetFile WeakAddressOf DownloadCompleted, WeakAddressOf DownloadProgress
 		  'mDownloadFiles.Append ffmpegFile
 		  '
 		  'Dim vcredistFile As VideoDl.IFile= New VideoDl.FileDownloaderVcredist(kUrlVcredist, SpecialFolder.Documents)
-		  'vcredistFile.SetProgressAction(WeakAddressOf DownloadProgress)
-		  'vcredistFile.SetCompletedAction(WeakAddressOf DownloadCompleted)
-		  'vcredistFile.Start
+		  'vcredistFile.GetFile WeakAddressOf DownloadCompleted, WeakAddressOf DownloadProgress
 		  'mDownloadFiles.Append vcredistFile
 		End Sub
 	#tag EndEvent

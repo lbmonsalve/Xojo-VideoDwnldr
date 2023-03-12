@@ -11,6 +11,7 @@ Inherits TestController
 		  group = New UnitTestsFail(Self, "Always Fail")
 		  group = New FileDownloaderUnitTests(Self, "FileDownloaderUnitTests")
 		  group = New PreferencesTests(Self, "PreferencesTests")
+		  group = New SourceUnitTests(Self, "SourceUnitTests")
 		  
 		End Sub
 	#tag EndEvent

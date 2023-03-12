@@ -1,16 +1,20 @@
 #tag Class
-Protected Class FileDownloaderUnitTests
+Protected Class SourceUnitTests
 Inherits TestGroup
-	#tag Method, Flags = &h0
-		Sub FileMockDownloaderTest()
-		  Dim file As FolderItem= VideoDl.FindFile("cacert-2022-07-19.pem", "ca-cert")
+	#tag Method, Flags = &h21
+		Private Sub MockAssets(assets() As VideoDl.IAsset)
+		  Assert.AreEqual 1, assets.Count, "AreEqual 1, assets.Count"
 		  
-		  Dim mockFile As VideoDl.IFile= New MockFileDownloader(file)
-		  mockFile.GetFile WeakAddressOf MockCompleted, WeakAddressOf MockProgress
-		  mDownloadFiles.Append mockFile
+		  Dim asset As VideoDl.IAsset= assets(0)
 		  
-		  Assert.Message "ini"
-		  'AsyncAwait 20
+		  Dim json As JSONData= asset.Info
+		  Assert.IsNotNil json, "IsNotNil json"
+		  Assert.AreEqual 1, json.Value("id").IntegerValue, "AreSame 1, json.Value(""id"").IntegerValue"
+		  Assert.AreSame "name1", json.Value("name").StringValue, "AreSame ""name1"", json.Value(""name"").StringValue"
+		  
+		  Dim file As VideoDl.IFile= asset.File
+		  file.GetFile WeakAddressOf MockCompleted
+		  mDownloadFiles.Append file
 		End Sub
 	#tag EndMethod
 
@@ -20,17 +24,23 @@ Inherits TestGroup
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h21
-		Private Sub MockProgress(bytesTotal As Uint64, bytesNow As Uint64, msg As String)
-		  Dim perc As String= " ("+ Str(bytesNow* 100/ bytesTotal, "###")+ "%)"
+	#tag Method, Flags = &h0
+		Sub MockYoutubeTest()
+		  Dim source As VideoDl.ISource= New MockSource
+		  source.GetAssets WeakAddressOf MockAssets
+		  mSources.Append source
 		  
-		  Assert.Message Str(bytesNow)+ "bytes de "+ Str(bytesTotal)+ perc
+		  Assert.Message "ini"
 		End Sub
 	#tag EndMethod
 
 
 	#tag Property, Flags = &h21
 		Private Shared mDownloadFiles() As VideoDl.IFile
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private Shared mSources() As VideoDl.ISource
 	#tag EndProperty
 
 

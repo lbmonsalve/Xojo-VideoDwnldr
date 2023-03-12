@@ -83,14 +83,13 @@ Implements IFile
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub SetCompletedAction(action As VideoDl.ActionCompleted)
-		  mActionCompleted= action
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub SetProgressAction(action As VideoDl.ActionProgress)
-		  mActionProgress= action
+		Sub GetFile(completed As VideoDl.ActionCompleted, progress As VideoDl.ActionProgress = Nil)
+		  // Parte de la interfaz VideoDl.IFile.
+		  
+		  mActionCompleted= completed
+		  mActionProgress= progress
+		  
+		  Start
 		End Sub
 	#tag EndMethod
 

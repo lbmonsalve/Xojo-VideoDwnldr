@@ -2,8 +2,7 @@
 Protected Class Manager
 	#tag Method, Flags = &h0
 		Sub Assets(action As VideoDl.ActionAssets)
-		  mSource.SetAssetsAction action
-		  mSource.Start
+		  mSource.GetAssets action
 		End Sub
 	#tag EndMethod
 

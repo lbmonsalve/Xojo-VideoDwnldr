@@ -8,16 +8,12 @@ Implements ISource
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub SetAssetsAction(action As VideoDl.ActionAssets)
+		Sub GetAssets(action As VideoDl.ActionAssets)
 		  mActionAssets= action
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub Start()
+		  
 		  Dim assets() As VideoDl.IAsset
 		  
-		  mActionAssets.Invoke assets
+		  If Not (mActionAssets Is Nil) Then mActionAssets.Invoke(assets)
 		End Sub
 	#tag EndMethod
 

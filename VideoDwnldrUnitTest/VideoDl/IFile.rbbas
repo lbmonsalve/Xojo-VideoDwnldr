@@ -1,19 +1,7 @@
 #tag Interface
 Protected Interface IFile
 	#tag Method, Flags = &h0
-		Sub SetCompletedAction(action As VideoDl.ActionCompleted)
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub SetProgressAction(action As VideoDl.ActionProgress)
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub Start()
+		Sub GetFile(completed As VideoDl.ActionCompleted, progress As VideoDl.ActionProgress = Nil)
 		  
 		End Sub
 	#tag EndMethod
