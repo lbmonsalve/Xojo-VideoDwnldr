@@ -1,24 +1,20 @@
 #tag Class
-Protected Class Manager
-	#tag Method, Flags = &h0
-		Sub Assets(action As VideoDl.ActionAssets)
-		  mSource.GetAssets action
+Protected Class FileDownloaderYoutubeDl
+Inherits VideoDl.FileDownloader
+	#tag Event
+		Sub Completed(fileTemp As FolderItem)
+		  If Not (FolderToCopy Is Nil) Then fileTemp.CopyFileTo FolderToCopy.Child(kYoutubeDlFileName)
 		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub Constructor(source As VideoDl.ISource)
-		  mSource= source
-		End Sub
-	#tag EndMethod
-
-
-	#tag Property, Flags = &h21
-		Private mSource As VideoDl.ISource
-	#tag EndProperty
+	#tag EndEvent
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="Idx"
+			Group="Behavior"
+			Type="Integer"
+			InheritedFrom="VideoDl.FileDownloader"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Index"
 			Visible=true

@@ -24,18 +24,6 @@ Implements VideoDl.IFile
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Sub GetFile(completed As VideoDl.ActionCompleted, progress As VideoDl.ActionProgress = Nil)
-		  // Parte de la interfaz VideoDl.IFile.
-		  
-		  mActionCompleted= completed
-		  mActionProgress= progress
-		  
-		  mProcess.Mode= Timer.ModeSingle
-		  mProcess.Enabled= True
-		End Sub
-	#tag EndMethod
-
 	#tag Method, Flags = &h21
 		Private Sub HandlerProcessAction(o As Timer)
 		  If mFile Is Nil Then
@@ -54,14 +42,39 @@ Implements VideoDl.IFile
 		    // fake work:
 		    
 		    bytesNow= (i* bytesTotal)/ 10
-		    If Not (mActionProgress Is Nil) Then mActionProgress.Invoke(bytesTotal, bytesNow, "")
-		    System.DebugLog "mockFile process ticks:"+ Str(waitTicks)
+		    If Not (mActionProgress Is Nil) Then mActionProgress.Invoke(bytesTotal, bytesNow, "", -1)
+		    System.DebugLog Str(waitTicks)
 		  Next
 		  
-		  If Not (mActionCompleted Is Nil) Then mActionCompleted.Invoke(mFile)
-		  System.DebugLog "mockFile completed!"
+		  If Not (mActionCompleted Is Nil) Then mActionCompleted.Invoke(mFile, -1)
+		  System.DebugLog "completed!"
 		  
 		  o.Mode= Timer.ModeOff
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub SetCompletedAction(action As VideoDl.ActionCompleted)
+		  // Parte de la interfaz VideoDl.IFile.
+		  
+		  mActionCompleted= action
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub SetProgressAction(action As VideoDl.ActionProgress)
+		  // Parte de la interfaz VideoDl.IFile.
+		  
+		  mActionProgress= action
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Start()
+		  // Parte de la interfaz VideoDl.IFile.
+		  
+		  mProcess.Mode= Timer.ModeSingle
+		  mProcess.Enabled= True
 		End Sub
 	#tag EndMethod
 

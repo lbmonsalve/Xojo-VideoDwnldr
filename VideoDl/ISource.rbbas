@@ -1,7 +1,13 @@
 #tag Interface
 Protected Interface ISource
 	#tag Method, Flags = &h0
-		Sub GetAssets(action As VideoDl.ActionAssets)
+		Sub SetAssetsAction(action As VideoDl.ActionAssets)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Start()
 		  
 		End Sub
 	#tag EndMethod

@@ -1,10 +1,28 @@
-#tag Interface
-Protected Interface IFile
+#tag Class
+Protected Class YoutubeAsset
+Implements IAsset
 	#tag Method, Flags = &h0
-		Sub GetFile(completed As VideoDl.ActionCompleted, progress As VideoDl.ActionProgress = Nil)
-		  
+		Sub Constructor(jInfo As JSONData)
+		  mInfo= jInfo
 		End Sub
 	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function File() As VideoDl.IFile
+		  Return New VideoDl.YoutubeFile(mInfo.Value("url").StringValue, mInfo.Value("id").StringValue)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function Info() As JSONData
+		  Return mInfo
+		End Function
+	#tag EndMethod
+
+
+	#tag Property, Flags = &h21
+		Private mInfo As JSONData
+	#tag EndProperty
 
 
 	#tag ViewBehavior
@@ -42,5 +60,5 @@ Protected Interface IFile
 			InheritedFrom="Object"
 		#tag EndViewProperty
 	#tag EndViewBehavior
-End Interface
-#tag EndInterface
+End Class
+#tag EndClass

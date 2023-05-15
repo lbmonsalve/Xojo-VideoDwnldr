@@ -8,12 +8,14 @@ tagsToChange.Append New Pair(";PKZip/", ";../../Xojo-zlib/PKZip/")
 tagsToChange.Append New Pair(";libcURL/", ";../../Xojo-libcURL/libcURL/")
 tagsToChange.Append New Pair(";UnitTest;", ";../../Xojo-UnitTest/UnitTest;")
 tagsToChange.Append New Pair(";UnitTest/", ";../../Xojo-UnitTest/UnitTest/")
+tagsToChange.Append New Pair(";VideoDl/", ";../VideoDl/")
 
 Dim foldersToMove() As Pair
 foldersToMove.Append New Pair("zlib", "../../Xojo-zlib/")
 foldersToMove.Append New Pair("PKZip", "../../Xojo-zlib/")
 foldersToMove.Append New Pair("libcURL", "../../Xojo-libcURL/")
 foldersToMove.Append New Pair("UnitTest", "../../Xojo-UnitTest/")
+foldersToMove.Append New Pair("VideoDl", "../")
 
 
 // dont change

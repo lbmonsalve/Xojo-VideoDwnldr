@@ -16,6 +16,12 @@ Inherits VideoDl.FileDownloader
 
 	#tag ViewBehavior
 		#tag ViewProperty
+			Name="Idx"
+			Group="Behavior"
+			Type="Integer"
+			InheritedFrom="VideoDl.FileDownloader"
+		#tag EndViewProperty
+		#tag ViewProperty
 			Name="Index"
 			Visible=true
 			Group="ID"

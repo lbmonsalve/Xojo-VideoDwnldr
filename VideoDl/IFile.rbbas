@@ -1,11 +1,22 @@
-#tag Class
-Protected Class FileDownloaderYoutubeDl
-Inherits VideoDl.FileDownloader
-	#tag Event
-		Sub Completed(fileTemp As FolderItem)
-		  If Not (FolderToCopy Is Nil) Then fileTemp.CopyFileTo FolderToCopy.Child(kYoutubeDlFileName)
+#tag Interface
+Protected Interface IFile
+	#tag Method, Flags = &h0
+		Sub SetCompletedAction(action As VideoDl.ActionCompleted)
+		  
 		End Sub
-	#tag EndEvent
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub SetProgressAction(action As VideoDl.ActionProgress)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Start()
+		  
+		End Sub
+	#tag EndMethod
 
 
 	#tag ViewBehavior
@@ -43,5 +54,5 @@ Inherits VideoDl.FileDownloader
 			InheritedFrom="Object"
 		#tag EndViewProperty
 	#tag EndViewBehavior
-End Class
-#tag EndClass
+End Interface
+#tag EndInterface

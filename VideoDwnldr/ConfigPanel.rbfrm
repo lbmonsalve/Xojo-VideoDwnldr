@@ -23,7 +23,7 @@ Begin ContainerControl ConfigPanel
    UseFocusRing    =   ""
    Visible         =   True
    Width           =   400
-   Begin Listbox Listbox1
+   Begin Listbox PropsLbx
       AutoDeactivate  =   True
       AutoHideScrollbars=   True
       Bold            =   ""
@@ -72,7 +72,7 @@ Begin ContainerControl ConfigPanel
       Width           =   360
       _ScrollWidth    =   -1
    End
-   Begin BevelButton BevelButton1
+   Begin BevelButton SaveBtn
       AcceptFocus     =   False
       AutoDeactivate  =   True
       BackColor       =   "&c00000000"
@@ -120,53 +120,36 @@ End
 #tag EndWindow
 
 #tag WindowCode
-	#tag Property, Flags = &h0
-		PreferencesFile As FolderItem
-	#tag EndProperty
+	#tag Hook, Flags = &h0
+		Event SavePressed()
+	#tag EndHook
 
 
 	#tag Constant, Name = kLocProp, Type = String, Dynamic = True, Default = \"Prop", Scope = Public
 	#tag EndConstant
 
 	#tag Constant, Name = kLocSave, Type = String, Dynamic = True, Default = \"Save", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Grabar"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Grabar"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocValue, Type = String, Dynamic = True, Default = \"Value", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Valor"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Valor"
 	#tag EndConstant
 
 
 #tag EndWindowCode
 
-#tag Events Listbox1
+#tag Events PropsLbx
 	#tag Event
 		Sub Open()
 		  Me.ColumnType(1)= Listbox.TypeEditable
 		End Sub
 	#tag EndEvent
 #tag EndEvents
-#tag Events BevelButton1
+#tag Events SaveBtn
 	#tag Event
 		Sub Action()
-		  Dim json As JSONData= PreferencesFile.OpenAsJSONData
-		  Dim changed As Boolean
-		  
-		  For i As Integer= 0 To Listbox1.ListCount- 1
-		    Dim name As String= Listbox1.Cell(i, 0)
-		    Dim value As String= Listbox1.Cell(i, 1)
-		    If json.HasName(name) Then
-		      If json.Value(name)<> value Then
-		        json.Value(name)= value
-		        changed= True
-		      End If
-		    Else
-		      json.Value(name)= value
-		      changed= True
-		    End If
-		  Next
-		  
-		  If changed Then json.Save PreferencesFile
+		  RaiseEvent SavePressed
 		End Sub
 	#tag EndEvent
 #tag EndEvents

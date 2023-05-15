@@ -81,15 +81,13 @@ Protected Class Preferences
 	#tag Constant, Name = kUrl_ffmpeg, Type = String, Dynamic = False, Default = \"url_ffmpeg", Scope = Public
 	#tag EndConstant
 
-	#tag Constant, Name = kUrl_ffmpeg_value, Type = String, Dynamic = True, Default = \"https://www.dropbox.com/s/ue2z3b7q7372mgs/ffmpeg-win-2.2.2.zip\?dl\x3D1", Scope = Private
-		#Tag Instance, Platform = Mac OS, Language = Default, Definition  = \"https://www.dropbox.com/s/ue2z3b7q7372mgs/ffmpeg-win-2.2.2.zip\?dl\x3D1"
+	#tag Constant, Name = kUrl_ffmpeg_value, Type = String, Dynamic = False, Default = \"https://www.dropbox.com/s/ue2z3b7q7372mgs/ffmpeg-win-2.2.2.zip\?dl\x3D1", Scope = Private
 	#tag EndConstant
 
 	#tag Constant, Name = kUrl_youtube_dl, Type = String, Dynamic = False, Default = \"url_youtube_dl", Scope = Public
 	#tag EndConstant
 
-	#tag Constant, Name = kUrl_youtube_dl_value, Type = String, Dynamic = True, Default = \"https://www.dropbox.com/s/ibq3eq8cy2hp584/youtube-dl.exe\?dl\x3D1", Scope = Private
-		#Tag Instance, Platform = Mac OS, Language = Default, Definition  = \"https://www.dropbox.com/s/ibq3eq8cy2hp584/youtube-dl.exe\?dl\x3D1"
+	#tag Constant, Name = kUrl_youtube_dl_value, Type = String, Dynamic = False, Default = \"https://www.dropbox.com/s/q6x4d1zkozb6sb3/yt-dlp.exe\?dl\x3D1", Scope = Private
 	#tag EndConstant
 
 	#tag Constant, Name = kVideos_folder, Type = String, Dynamic = False, Default = \"videos_folder", Scope = Public

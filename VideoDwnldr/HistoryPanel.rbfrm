@@ -23,7 +23,7 @@ Begin ContainerControl HistoryPanel
    UseFocusRing    =   ""
    Visible         =   True
    Width           =   400
-   Begin Listbox Listbox1
+   Begin Listbox HistoryLbx
       AutoDeactivate  =   True
       AutoHideScrollbars=   True
       Bold            =   ""
@@ -72,7 +72,7 @@ Begin ContainerControl HistoryPanel
       Width           =   360
       _ScrollWidth    =   -1
    End
-   Begin TextField TextField1
+   Begin TextField NameTxf
       AcceptTabs      =   ""
       Alignment       =   0
       AutoDeactivate  =   True
@@ -115,7 +115,7 @@ Begin ContainerControl HistoryPanel
       Visible         =   True
       Width           =   260
    End
-   Begin BevelButton BevelButton1
+   Begin BevelButton MergeBtn
       AcceptFocus     =   False
       AutoDeactivate  =   True
       BackColor       =   "&c00000000"
@@ -163,90 +163,48 @@ End
 #tag EndWindow
 
 #tag WindowCode
-	#tag Method, Flags = &h21
-		Private Sub CmdCompleted(o As Shell)
-		  System.DebugLog CurrentMethodName+ " "+ o.Result
-		  BevelButton1.Enabled= True
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h21
-		Private Function FindFile(name As String) As FolderItem
-		  If name.InStr(kSep)> 0 Then
-		    Dim fNames() As String= name.Split(kSep)
-		    name= fNames(fNames.Ubound)
-		  End If
-		  Return PanelMain.DownloadPanel1.VideosFolder.Child(name)
-		  
-		  'Dim folder As FolderItem= PanelMain.DownloadPanel1.VideosFolder
-		  ''Dim nameWords() As String= name.Split(" ")
-		  '
-		  'For i As Integer= 1 To folder.Count
-		  'Dim file As FolderItem= folder.Item(i)
-		  'If file.Directory Then Continue
-		  '
-		  'Dim fileName As String= file.Name
-		  'If fileName= name Then Return file
-		  ''Dim fileNameWords() As String= fileName.Split(" ")
-		  ''If nameWords.AreSameAs(fileNameWords) Then Return file
-		  'Next
-		  '
-		  'Return folder
-		End Function
-	#tag EndMethod
+	#tag Hook, Flags = &h0
+		Event MergePressed()
+	#tag EndHook
 
 
-	#tag Property, Flags = &h21
-		Private mCmd As Shell
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		PanelMain As MainPanel
-	#tag EndProperty
-
-
-	#tag Constant, Name = kLocMerge, Type = String, Dynamic = True, Default = \"Merge", Scope = Private
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Mezcla"
+	#tag Constant, Name = kLocInvalidFileName, Type = String, Dynamic = True, Default = \"Invalid file name", Scope = Public
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Nombre archivo inv\xC3\xA1lido"
 	#tag EndConstant
 
-	#tag Constant, Name = kLocMergeIsRunning, Type = String, Dynamic = True, Default = \"Merge is running", Scope = Private
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Procesando mezcla"
+	#tag Constant, Name = kLocMerge, Type = String, Dynamic = True, Default = \"Merge", Scope = Public
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Mezcla"
 	#tag EndConstant
 
-	#tag Constant, Name = kLocMustBeSelectedTwoFiles, Type = String, Dynamic = True, Default = \"Must be selected two files (Shift+Click)", Scope = Private
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Debe seleccionar dos archivos (Shift+Clic)"
+	#tag Constant, Name = kLocMergeIsRunning, Type = String, Dynamic = True, Default = \"Merge is running", Scope = Public
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Procesando mezcla"
 	#tag EndConstant
 
-	#tag Constant, Name = kSep, Type = String, Dynamic = True, Default = \"\\", Scope = Private
+	#tag Constant, Name = kLocMustBeSelectedTwoFiles, Type = String, Dynamic = True, Default = \"Must be selected two files (Ctrl+Click)", Scope = Public
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Debe seleccionar dos archivos (Ctrl+Clic)"
+	#tag EndConstant
+
+	#tag Constant, Name = kSep, Type = String, Dynamic = True, Default = \"\\", Scope = Public
 		#Tag Instance, Platform = Mac OS, Language = Default, Definition  = \"\\"
-		#Tag Instance, Platform = -, Language = Default, Definition  = \"/"
+		#Tag Instance, Platform = Any, Language = Default, Definition  = \"/"
 		#Tag Instance, Platform = Mac Classic, Language = Default, Definition  = \"/"
 	#tag EndConstant
 
 
 #tag EndWindowCode
 
-#tag Events Listbox1
+#tag Events HistoryLbx
 	#tag Event
 		Function CellClick(row as Integer, column as Integer, x as Integer, y as Integer) As Boolean
 		  If column= 0 Then
-		    TextField1.Text= Me.Cell(row, 0)
+		    NameTxf.Text= Me.Cell(row, 0)
 		  End If
 		End Function
 	#tag EndEvent
 	#tag Event
-		Sub DoubleClick()
-		  If Listbox1.ListIndex<> -1 Then
-		    Dim folder As FolderItem= Listbox1.RowTag(Listbox1.ListIndex)
-		    If folder.Directory Then folder.Launch
-		  End If
-		  
-		End Sub
-	#tag EndEvent
-	#tag Event
 		Function CellBackgroundPaint(g As Graphics, row As Integer, column As Integer) As Boolean
 		  If row< Me.ListCount Then
-		    If Me.Cell(row, 1)= MainPanel.kLocCompleted Then
+		    If Me.Cell(row, 1)= DownloaderPanel.kLocCompleted Then
 		      g.ForeColor= &cD9FFD900
 		    Else
 		      g.ForeColor= &cFFFFCA00
@@ -256,53 +214,17 @@ End
 		End Function
 	#tag EndEvent
 #tag EndEvents
-#tag Events TextField1
+#tag Events NameTxf
 	#tag Event
 		Sub Open()
 		  Me.BackColor= Self.BackColor
 		End Sub
 	#tag EndEvent
 #tag EndEvents
-#tag Events BevelButton1
+#tag Events MergeBtn
 	#tag Event
 		Sub Action()
-		  If Listbox1.ListCount= 0 Then
-		    MsgBox kLocMustBeSelectedTwoFiles
-		    Return
-		  End If
-		  
-		  Dim inputFileNames() As String
-		  For i As Integer= 0 To Listbox1.ListCount- 1
-		    If Listbox1.Selected(i) Then inputFileNames.Append Listbox1.Cell(i, 0)
-		  Next
-		  
-		  If inputFileNames.Ubound<> 1 Then
-		    MsgBox kLocMustBeSelectedTwoFiles
-		    Return
-		  End If
-		  
-		  Dim cmd As String= PanelMain.FfmpegFile.ShellPath +" "
-		  Dim file As FolderItem
-		  For Each name As String In inputFileNames
-		    file= FindFile(name)
-		    cmd= cmd+ "-i """+ file.ShellPath+ """ "
-		  Next
-		  file= PanelMain.DownloadPanel1.VideosFolder.Child(TextField1.Text.Trim)
-		  cmd= cmd+ "-c copy """+ file.ShellPath+ """"
-		  
-		  System.DebugLog CurrentMethodName+ " "+ cmd
-		  Me.Enabled= False
-		  
-		  If mCmd Is Nil Then
-		    mCmd= New Shell
-		    AddHandler mCmd.Completed, WeakAddressOf CmdCompleted
-		  End If
-		  If mCmd.IsRunning Then
-		    MsgBox kLocMergeIsRunning
-		    Return
-		  End If
-		  
-		  mCmd.Execute cmd
+		  RaiseEvent MergePressed
 		End Sub
 	#tag EndEvent
 #tag EndEvents
