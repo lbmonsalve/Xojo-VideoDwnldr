@@ -19,12 +19,14 @@ Protected Module VideoDl
 		  
 		  exec= pref.File.Parent.Child(kFfmpegFolderName).Child(kFFmpegFileName)
 		  Try
+		    #pragma BreakOnExceptions Off
 		    If Not exec.Exists Then
 		      exec= pref.File.Parent.Child(kFfmpegFolderName).Child("bin").Child(kFFmpegFileName)
 		      If Not exec.Exists Then
 		        System.DebugLog CurrentMethodName+ " Not exec.Exists"
 		      End If
 		    End If
+		    #pragma BreakOnExceptions Default
 		  Catch exc As RuntimeException
 		    System.DebugLog CurrentMethodName+ " exception: "+ exc.Message
 		  End Try
@@ -49,17 +51,20 @@ Protected Module VideoDl
 
 	#tag Method, Flags = &h21
 		Private Function GetYoutubeDlExecutable() As FolderItem
-		  Dim exec As FolderItem
 		  Dim pref As New VideoDl.Preferences
+		  Dim exec As FolderItem= pref.File.Parent.Child(kYoutubeDlFolderName)
+		  If Not exec.Exists Then exec.CreateAsFolder
 		  
-		  exec= pref.File.Parent.Child(kYoutubeDlFolderName).Child(kYoutubeDlFileName)
+		  exec= exec.Child(kYoutubeDlFileName)
 		  Try
+		    #pragma BreakOnExceptions Off
 		    If Not exec.Exists Then
-		      exec= pref.File.Parent.Child(kYoutubeDlFolderName).Child("yt-dlp.exe")
+		      exec= exec.Parent.Child("yt-dlp.exe")
 		      If Not exec.Exists Then
 		        System.DebugLog CurrentMethodName+ " Not exec.Exists"
 		      End If
 		    End If
+		    #pragma BreakOnExceptions Default
 		  Catch exc As RuntimeException
 		    System.DebugLog CurrentMethodName+ " exception: "+ exc.Message
 		  End Try
@@ -72,13 +77,13 @@ Protected Module VideoDl
 	#tag Constant, Name = kFFmpegFileName, Type = String, Dynamic = False, Default = \"ffmpeg.exe", Scope = Private
 	#tag EndConstant
 
-	#tag Constant, Name = kFfmpegFolderName, Type = String, Dynamic = False, Default = \"ffmpeg", Scope = Private
+	#tag Constant, Name = kFfmpegFolderName, Type = String, Dynamic = False, Default = \"ffmpeg", Scope = Public
 	#tag EndConstant
 
 	#tag Constant, Name = kYoutubeDlFileName, Type = String, Dynamic = False, Default = \"youtube-dl.exe", Scope = Private
 	#tag EndConstant
 
-	#tag Constant, Name = kYoutubeDlFolderName, Type = String, Dynamic = False, Default = \"youtube-dl", Scope = Private
+	#tag Constant, Name = kYoutubeDlFolderName, Type = String, Dynamic = False, Default = \"youtube-dl", Scope = Public
 	#tag EndConstant
 
 

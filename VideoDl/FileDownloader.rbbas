@@ -110,7 +110,7 @@ Implements IFile
 
 
 	#tag Hook, Flags = &h0
-		Event Completed(fileTemp As FolderItem)
+		Event Completed(ByRef fileTemp As FolderItem)
 	#tag EndHook
 
 	#tag Hook, Flags = &h0

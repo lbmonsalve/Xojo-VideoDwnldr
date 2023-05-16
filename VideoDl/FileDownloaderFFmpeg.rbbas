@@ -2,7 +2,7 @@
 Protected Class FileDownloaderFFmpeg
 Inherits VideoDl.FileDownloader
 	#tag Event
-		Sub Completed(fileTemp As FolderItem)
+		Sub Completed(ByRef fileTemp As FolderItem)
 		  If FolderToCopy Is Nil Then Return
 		  
 		  Try

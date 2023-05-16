@@ -212,10 +212,12 @@ End
 
 	#tag Method, Flags = &h21
 		Private Sub DownloadProgress(bytesTotal As Uint64, bytesNow As Uint64, msg As String, idx As Integer)
-		  'Dim perc As String= " ("+ Str(bytesNow* 100/ bytesTotal, "###")+ "%)"
-		  'System.DebugLog Str(bytesNow)+ "bytes de "+ Str(bytesTotal)+ perc
-		  
-		  System.DebugLog CurrentMethodName+ " msg: "+ msg
+		  If bytesTotal> 0 Then
+		    Dim perc As String= " ("+ Str(bytesNow* 100/ bytesTotal, "###")+ "%)"
+		    System.DebugLog Str(bytesNow)+ "bytes de "+ Str(bytesTotal)+ perc
+		  Else
+		    System.DebugLog CurrentMethodName+ " msg: "+ msg
+		  End If
 		End Sub
 	#tag EndMethod
 
@@ -254,14 +256,14 @@ End
 #tag Events PushButton1
 	#tag Event
 		Sub Action()
-		  If mFFmpegMerge Is Nil Then
-		    mFFmpegMerge= New VideoDl.FFmpeg
-		    mFFmpegMerge.Add SpecialFolder.Movies.Child("Scott Spark RC de Nino Schurter 🚀 #shorts #mtb-AA9Ybq5in-c.m4a")
-		    mFFmpegMerge.Add SpecialFolder.Movies.Child("Scott Spark RC de Nino Schurter 🚀 #shorts #mtb-AA9Ybq5in-c.mp4")
-		    mFFmpegMerge.Merge SpecialFolder.Movies.Child("Nino.mp4")
-		  Else
-		    mFFmpegMerge= Nil
-		  End If
+		  'If mFFmpegMerge Is Nil Then
+		  'mFFmpegMerge= New VideoDl.FFmpeg
+		  'mFFmpegMerge.Add SpecialFolder.Movies.Child("Scott Spark RC de Nino Schurter 🚀 #shorts #mtb-AA9Ybq5in-c.m4a")
+		  'mFFmpegMerge.Add SpecialFolder.Movies.Child("Scott Spark RC de Nino Schurter 🚀 #shorts #mtb-AA9Ybq5in-c.mp4")
+		  'mFFmpegMerge.Merge SpecialFolder.Movies.Child("Nino.mp4")
+		  'Else
+		  'mFFmpegMerge= Nil
+		  'End If
 		  
 		  
 		  'If mVideoSource Is Nil Then
@@ -308,7 +310,7 @@ End
 		  
 		  
 		  'Const kUrlYoutubeDl= "https://www.dropbox.com/s/ibq3eq8cy2hp584/youtube-dl.exe?dl=1"
-		  'Const kUrlFFmpeg= "https://www.dropbox.com/s/ue2z3b7q7372mgs/ffmpeg-win-2.2.2.zip?dl=1"
+		  Const kUrlFFmpeg= "https://www.dropbox.com/s/ue2z3b7q7372mgs/ffmpeg-win-2.2.2.zip?dl=1"
 		  'Const kUrlVcredist= "https://www.dropbox.com/s/p978euou1auz4vy/vcredist_100.zip?dl=1"
 		  '
 		  'Dim youtubeFile As VideoDl.IFile= New VideoDl.FileDownloaderYoutubeDl(kUrlYoutubeDl, SpecialFolder.Documents)
@@ -317,11 +319,11 @@ End
 		  'youtubeFile.Start
 		  'mDownloadFiles.Append youtubeFile
 		  '
-		  'Dim ffmpegFile As VideoDl.IFile= New VideoDl.FileDownloaderFFmpeg(kUrlFFmpeg, SpecialFolder.Documents)
-		  'ffmpegFile.SetProgressAction(WeakAddressOf DownloadProgress)
-		  'ffmpegFile.SetCompletedAction(WeakAddressOf DownloadCompleted)
-		  'ffmpegFile.Start
-		  'mDownloadFiles.Append ffmpegFile
+		  Dim ffmpegFile As VideoDl.IFile= New VideoDl.FileDownloaderFFmpeg(kUrlFFmpeg, SpecialFolder.Documents)
+		  ffmpegFile.SetProgressAction(WeakAddressOf DownloadProgress)
+		  ffmpegFile.SetCompletedAction(WeakAddressOf DownloadCompleted)
+		  ffmpegFile.Start
+		  mDownloadFiles.Append ffmpegFile
 		  '
 		  'Dim vcredistFile As VideoDl.IFile= New VideoDl.FileDownloaderVcredist(kUrlVcredist, SpecialFolder.Documents)
 		  'vcredistFile.SetProgressAction(WeakAddressOf DownloadProgress)

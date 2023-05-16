@@ -144,35 +144,72 @@ End
 		  Dim youtubeExec As FolderItem= VideoDl.Youtube.Executable
 		  If youtubeExec Is Nil Then
 		    DownloadYoutubeDl
-		    Return
 		  ElseIf Not youtubeExec.Exists Then
 		    DownloadYoutubeDl
-		    Return
+		  Else
+		    mChkYoutubeDlFile= True
 		  End If
 		  
 		  Dim ffmpegExec As FolderItem= VideoDl.FFmpeg.Executable
 		  If ffmpegExec Is Nil Then
 		    DownloadFFmpeg
-		    Return
 		  ElseIf Not ffmpegExec.Exists Then
 		    DownloadFFmpeg
-		    Return
+		  Else
+		    mChkFFmpegFile= True
 		  End If
 		  
-		  DownloadPanel1.Enabled= True
+		  CheckEnableDownloadPanel
 		End Sub
 	#tag EndEvent
 
 
 	#tag Method, Flags = &h21
+		Private Sub CheckEnableDownloadPanel()
+		  If mChkYoutubeDlFile And mChkFFmpegFile Then
+		    DownloadPanel1.Enabled= True
+		  End If
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
 		Private Sub DownloadFFmpeg()
-		  MsgBox "Download ffmpeg!"
+		  Dim pref As New VideoDl.Preferences
+		  Dim ffmpegFolder As FolderItem= pref.File.Parent
+		  
+		  Dim json As JSONData= pref.File.OpenAsJSONData
+		  Dim urlStr As String= json.Value(VideoDl.Preferences.kUrl_ffmpeg).StringValue
+		  Dim ffmpegFile As VideoDl.IFile= New VideoDl.FileDownloaderFFmpeg(urlStr, ffmpegFolder)
+		  
+		  Dim list As Listbox= HistoryPanel1.HistoryLbx
+		  list.AddRow DownloadPanel.kLocInit
+		  list.RowTag(list.LastIndex)= ffmpegFile
+		  VideoDl.FileDownloaderFFmpeg(ffmpegFile).Idx= list.LastIndex
+		  
+		  ffmpegFile.SetProgressAction WeakAddressOf HandlerProgress
+		  ffmpegFile.SetCompletedAction WeakAddressOf HandlerCompleted
+		  ffmpegFile.Start
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
 		Private Sub DownloadYoutubeDl()
-		  MsgBox "Download YoutubeDl!"
+		  Dim pref As New VideoDl.Preferences
+		  Dim youtubeDlFolder As FolderItem= pref.File.Parent.Child(VideoDl.kYoutubeDlFolderName)
+		  'If Not youtubeDlFolder.Exists Then youtubeDlFolder.CreateAsFolder
+		  
+		  Dim json As JSONData= pref.File.OpenAsJSONData
+		  Dim urlStr As String= json.Value(VideoDl.Preferences.kUrl_youtube_dl).StringValue
+		  Dim youtubeFile As VideoDl.IFile= New VideoDl.FileDownloaderYoutubeDl(urlStr, youtubeDlFolder)
+		  
+		  Dim list As Listbox= HistoryPanel1.HistoryLbx
+		  list.AddRow DownloadPanel.kLocInit
+		  list.RowTag(list.LastIndex)= youtubeFile
+		  VideoDl.FileDownloaderYoutubeDl(youtubeFile).Idx= list.LastIndex
+		  
+		  youtubeFile.SetProgressAction WeakAddressOf HandlerProgress
+		  youtubeFile.SetCompletedAction WeakAddressOf HandlerCompleted
+		  youtubeFile.Start
 		End Sub
 	#tag EndMethod
 
@@ -200,11 +237,20 @@ End
 	#tag Method, Flags = &h21
 		Private Sub HandlerCompleted(fileTemp As FolderItem, idx As Integer)
 		  If fileTemp Is Nil Then
-		    MsgBox "error!"
+		    MsgBox "Download file error!"
 		    Return
 		  End If
 		  
-		  HistoryPanel1.HistoryLbx.Cell(idx, 0)= fileTemp.AbsoluteNativePath
+		  Dim list As Listbox= HistoryPanel1.HistoryLbx
+		  list.Cell(idx, 0)= fileTemp.AbsoluteNativePath
+		  
+		  If list.RowTag(idx) IsA VideoDl.FileDownloaderYoutubeDl Then
+		    mChkYoutubeDlFile= True
+		    CheckEnableDownloadPanel
+		  ElseIf list.RowTag(idx) IsA VideoDl.FileDownloaderFFmpeg Then
+		    mChkFFmpegFile= True
+		    CheckEnableDownloadPanel
+		  End If
 		End Sub
 	#tag EndMethod
 
@@ -216,10 +262,23 @@ End
 
 	#tag Method, Flags = &h21
 		Private Sub HandlerProgress(bytesTotal As Uint64, bytesNow As Uint64, msg As String, idx As Integer)
-		  HistoryPanel1.HistoryLbx.Cell(idx, 1)= msg
+		  If bytesTotal> 0 Then
+		    Dim perc As String= " ("+ Str(bytesNow* 100/ bytesTotal, "###")+ "%)"
+		    HistoryPanel1.HistoryLbx.Cell(idx, 1)= Str(bytesNow)+ kLocBytesOf+ Str(bytesTotal)+ perc
+		  Else
+		    HistoryPanel1.HistoryLbx.Cell(idx, 1)= msg
+		  End If
 		End Sub
 	#tag EndMethod
 
+
+	#tag Property, Flags = &h21
+		Private mChkFFmpegFile As Boolean
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mChkYoutubeDlFile As Boolean
+	#tag EndProperty
 
 	#tag Property, Flags = &h21
 		Private mVideoMerge As VideoDl.FFmpeg
@@ -229,6 +288,10 @@ End
 		Private mVideoSource As VideoDl.ISource
 	#tag EndProperty
 
+
+	#tag Constant, Name = kLocBytesOf, Type = String, Dynamic = False, Default = \"bytes de ", Scope = Public
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"bytes de "
+	#tag EndConstant
 
 	#tag Constant, Name = kLocCompleted, Type = String, Dynamic = True, Default = \"Completed!", Scope = Public
 		#Tag Instance, Platform = Any, Language = es, Definition  = \"Completado!"

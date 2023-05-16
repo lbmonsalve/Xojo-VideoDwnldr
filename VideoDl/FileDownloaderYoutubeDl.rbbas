@@ -2,8 +2,14 @@
 Protected Class FileDownloaderYoutubeDl
 Inherits VideoDl.FileDownloader
 	#tag Event
-		Sub Completed(fileTemp As FolderItem)
-		  If Not (FolderToCopy Is Nil) Then fileTemp.CopyFileTo FolderToCopy.Child(kYoutubeDlFileName)
+		Sub Completed(ByRef fileTemp As FolderItem)
+		  If FolderToCopy Is Nil Then Return
+		  If Not FolderToCopy.Exists Then FolderToCopy.CreateAsFolder
+		  
+		  Dim fileNew As FolderItem= FolderToCopy.Child(kYoutubeDlFileName)
+		  fileTemp.CopyFileTo fileNew
+		  fileTemp= fileNew
+		  
 		End Sub
 	#tag EndEvent
 
