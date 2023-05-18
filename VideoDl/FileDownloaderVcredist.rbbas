@@ -2,7 +2,7 @@
 Protected Class FileDownloaderVcredist
 Inherits VideoDl.FileDownloader
 	#tag Event
-		Sub Completed(fileTemp As FolderItem)
+		Sub Completed(ByRef fileTemp As FolderItem)
 		  If FolderToCopy Is Nil Then Return
 		  
 		  Try

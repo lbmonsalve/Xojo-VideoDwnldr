@@ -266,14 +266,14 @@ End
 		  'End If
 		  
 		  
-		  'If mVideoSource Is Nil Then
-		  'Me.Enabled= False
-		  'mVideoSource= New VideoDl.Youtube("https://youtu.be/AA9Ybq5in-c")
-		  'mVideoSource.SetAssetsAction WeakAddressOf HandlerAssets
-		  'mVideoSource.Start
-		  'Else
-		  'mVideoSource= Nil
-		  'End If
+		  If mVideoSource Is Nil Then
+		    Me.Enabled= False
+		    mVideoSource= New VideoDl.Youtube("https://youtu.be/AA9Ybq5in-c")
+		    mVideoSource.SetAssetsAction WeakAddressOf HandlerAssets
+		    mVideoSource.Start
+		  Else
+		    mVideoSource= Nil
+		  End If
 		  
 		  
 		  'Me.Enabled= False
@@ -310,7 +310,7 @@ End
 		  
 		  
 		  'Const kUrlYoutubeDl= "https://www.dropbox.com/s/ibq3eq8cy2hp584/youtube-dl.exe?dl=1"
-		  Const kUrlFFmpeg= "https://www.dropbox.com/s/ue2z3b7q7372mgs/ffmpeg-win-2.2.2.zip?dl=1"
+		  'Const kUrlFFmpeg= "https://www.dropbox.com/s/ue2z3b7q7372mgs/ffmpeg-win-2.2.2.zip?dl=1"
 		  'Const kUrlVcredist= "https://www.dropbox.com/s/p978euou1auz4vy/vcredist_100.zip?dl=1"
 		  '
 		  'Dim youtubeFile As VideoDl.IFile= New VideoDl.FileDownloaderYoutubeDl(kUrlYoutubeDl, SpecialFolder.Documents)
@@ -319,11 +319,11 @@ End
 		  'youtubeFile.Start
 		  'mDownloadFiles.Append youtubeFile
 		  '
-		  Dim ffmpegFile As VideoDl.IFile= New VideoDl.FileDownloaderFFmpeg(kUrlFFmpeg, SpecialFolder.Documents)
-		  ffmpegFile.SetProgressAction(WeakAddressOf DownloadProgress)
-		  ffmpegFile.SetCompletedAction(WeakAddressOf DownloadCompleted)
-		  ffmpegFile.Start
-		  mDownloadFiles.Append ffmpegFile
+		  'Dim ffmpegFile As VideoDl.IFile= New VideoDl.FileDownloaderFFmpeg(kUrlFFmpeg, SpecialFolder.Documents)
+		  'ffmpegFile.SetProgressAction(WeakAddressOf DownloadProgress)
+		  'ffmpegFile.SetCompletedAction(WeakAddressOf DownloadCompleted)
+		  'ffmpegFile.Start
+		  'mDownloadFiles.Append ffmpegFile
 		  '
 		  'Dim vcredistFile As VideoDl.IFile= New VideoDl.FileDownloaderVcredist(kUrlVcredist, SpecialFolder.Documents)
 		  'vcredistFile.SetProgressAction(WeakAddressOf DownloadProgress)

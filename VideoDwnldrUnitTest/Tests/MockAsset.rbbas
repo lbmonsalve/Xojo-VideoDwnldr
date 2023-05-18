@@ -2,7 +2,7 @@
 Protected Class MockAsset
 Implements VideoDl.IAsset
 	#tag Method, Flags = &h0
-		Sub Constructor(json As JSONData, file As VideoDl.IFile)
+		Sub Constructor(json As JSONData, file As FolderItem)
 		  mJson= json
 		  mFile= file
 		End Sub
@@ -12,7 +12,7 @@ Implements VideoDl.IAsset
 		Function File() As VideoDl.IFile
 		  // Parte de la interfaz VideoDl.IAsset.
 		  
-		  Return mFile
+		  Return New MockFileDownloader(mFile)
 		End Function
 	#tag EndMethod
 
@@ -26,7 +26,7 @@ Implements VideoDl.IAsset
 
 
 	#tag Property, Flags = &h21
-		Private mFile As VideoDl.IFile
+		Private mFile As FolderItem
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
@@ -34,40 +34,5 @@ Implements VideoDl.IAsset
 	#tag EndProperty
 
 
-	#tag ViewBehavior
-		#tag ViewProperty
-			Name="Index"
-			Visible=true
-			Group="ID"
-			InitialValue="-2147483648"
-			InheritedFrom="Object"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Left"
-			Visible=true
-			Group="Position"
-			InitialValue="0"
-			InheritedFrom="Object"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Name"
-			Visible=true
-			Group="ID"
-			InheritedFrom="Object"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Super"
-			Visible=true
-			Group="ID"
-			InheritedFrom="Object"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Top"
-			Visible=true
-			Group="Position"
-			InitialValue="0"
-			InheritedFrom="Object"
-		#tag EndViewProperty
-	#tag EndViewBehavior
 End Class
 #tag EndClass

@@ -2,21 +2,32 @@
 Protected Class MockSource
 Implements VideoDl.ISource
 	#tag Method, Flags = &h0
-		Sub GetAssets(action As VideoDl.ActionAssets)
+		Sub AddAsset(json As JSONData, file As FolderItem)
+		  mJsons.Append json
+		  mFiles.Append file
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub SetAssetsAction(action As VideoDl.ActionAssets)
 		  // Parte de la interfaz VideoDl.ISource.
 		  
 		  mActionAssets= action
-		  
-		  Dim json As New JSONData
-		  json.Value("id")= 1
-		  json.Value("name")= "name1"
-		  
-		  Dim file As VideoDl.IFile= New MockFileDownloader(VideoDl.FindFile("cacert-2022-07-19.pem", "ca-cert"))
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Start()
+		  // Parte de la interfaz VideoDl.ISource.
 		  
 		  Dim assets() As VideoDl.IAsset
-		  assets.Append New MockAsset(json, file)
 		  
-		  If Not (mActionAssets Is Nil) Then mActionAssets.Invoke(assets)
+		  // do some:
+		  For i As Integer= 0 To mJsons.Ubound
+		    assets.Append New MockAsset(mJsons(i), mFiles(i))
+		  Next
+		  
+		  If Not (mActionAssets Is Nil) Then mActionAssets.Invoke assets
 		End Sub
 	#tag EndMethod
 
@@ -25,41 +36,14 @@ Implements VideoDl.ISource
 		Private mActionAssets As VideoDl.ActionAssets
 	#tag EndProperty
 
+	#tag Property, Flags = &h21
+		Private mFiles() As FolderItem
+	#tag EndProperty
 
-	#tag ViewBehavior
-		#tag ViewProperty
-			Name="Index"
-			Visible=true
-			Group="ID"
-			InitialValue="-2147483648"
-			InheritedFrom="Object"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Left"
-			Visible=true
-			Group="Position"
-			InitialValue="0"
-			InheritedFrom="Object"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Name"
-			Visible=true
-			Group="ID"
-			InheritedFrom="Object"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Super"
-			Visible=true
-			Group="ID"
-			InheritedFrom="Object"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Top"
-			Visible=true
-			Group="Position"
-			InitialValue="0"
-			InheritedFrom="Object"
-		#tag EndViewProperty
-	#tag EndViewBehavior
+	#tag Property, Flags = &h21
+		Private mJsons() As JSONData
+	#tag EndProperty
+
+
 End Class
 #tag EndClass

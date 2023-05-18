@@ -14,10 +14,10 @@ Implements ISource
 
 	#tag Method, Flags = &h21
 		Private Sub CmdCompleted(o As Shell)
+		  Dim assets() As VideoDl.IAsset
+		  
 		  If o.ErrorCode<> 0 Then
 		    System.DebugLog CurrentMethodName+ " error: "+ Str(o.ErrorCode)
-		    
-		    Dim assets() As VideoDl.IAsset
 		    mActionAssets.Invoke assets
 		    Return
 		  End If
@@ -35,8 +35,6 @@ Implements ISource
 		      addFrmts= True
 		    End If
 		  Next
-		  
-		  Dim assets() As VideoDl.IAsset
 		  
 		  For Each frmt As String In frmts
 		    Dim elem As New JSONData
@@ -115,8 +113,51 @@ Implements ISource
 
 	#tag Note, Name = Readme
 		
-		version: 2023.02.21.334
+		Example:
 		
+		``` vb
+		mVideoSource= New VideoDl.Youtube("https://youtu.be/AA9Ybq5in-c")
+		mVideoSource.SetAssetsAction WeakAddressOf HandlerAssets
+		mVideoSource.Start
+		```
+		
+		``` vb
+		Private Sub HandlerAssets(assets() As VideoDl.IAsset)
+		  mVideoAssets= assets
+		End Sub
+		```
+		
+		``` vb
+		  Dim asset As VideoDl.IAsset= mVideoAssets(11)
+		  mVideoFile= asset.File
+		  mVideoFile.SetProgressAction WeakAddressOf DownloadProgress
+		  mVideoFile.SetCompletedAction WeakAddressOf DownloadCompleted
+		  mVideoFile.Start
+		```
+		
+		``` vb
+		Private Sub DownloadProgress(bytesTotal As Uint64, bytesNow As Uint64, msg As String, idx As Integer)
+		  If bytesTotal> 0 Then
+		    Dim perc As String= " ("+ Str(bytesNow* 100/ bytesTotal, "###")+ "%)"
+		    System.DebugLog Str(bytesNow)+ "bytes de "+ Str(bytesTotal)+ perc
+		  Else
+		    System.DebugLog CurrentMethodName+ " msg: "+ msg
+		  End If
+		End Sub
+		```
+		
+		``` vb
+		Private Sub DownloadCompleted(fileTemp As FolderItem, idx As Integer)
+		  System.DebugLog fileTemp.Name+ " completed!"
+		End Sub
+		```
+		
+		see UnitTestWindow.PushButton1.Action
+		
+		
+		
+		
+		yt-dlp version: 2023.02.21.334
 		
 		commands:
 		--version
