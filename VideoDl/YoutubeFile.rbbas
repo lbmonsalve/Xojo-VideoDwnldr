@@ -22,7 +22,7 @@ Implements IFile
 		  End If
 		  
 		  If Not (mActionCompleted Is Nil) Then
-		    mActionCompleted.Invoke mFileTemp, Idx
+		    mActionCompleted.Invoke mFileTemp, mIdx
 		  End If
 		End Sub
 	#tag EndMethod
@@ -60,7 +60,7 @@ Implements IFile
 		        If msg.Trim.Len= 0 Then Continue
 		        'System.DebugLog CurrentMethodName+ " msg: "+ msg
 		        If Not (mActionProgress Is Nil) Then
-		          mActionProgress.Invoke 0, 0, msg, Idx
+		          mActionProgress.Invoke 0, 0, msg, mIdx
 		        End If
 		      Next
 		    End If
@@ -88,6 +88,12 @@ Implements IFile
 	#tag Method, Flags = &h0
 		Sub SetCompletedAction(action As VideoDl.ActionCompleted)
 		  mActionCompleted= action
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub SetIndex(Assigns idx As Integer)
+		  mIdx= idx
 		End Sub
 	#tag EndMethod
 
@@ -132,10 +138,6 @@ Implements IFile
 	#tag EndMethod
 
 
-	#tag Property, Flags = &h0
-		Idx As Integer
-	#tag EndProperty
-
 	#tag Property, Flags = &h21
 		Private mActionCompleted As VideoDl.ActionCompleted
 	#tag EndProperty
@@ -157,16 +159,15 @@ Implements IFile
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
+		Private mIdx As Integer
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
 		Private mUrl As String
 	#tag EndProperty
 
 
 	#tag ViewBehavior
-		#tag ViewProperty
-			Name="Idx"
-			Group="Behavior"
-			Type="Integer"
-		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Index"
 			Visible=true

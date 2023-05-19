@@ -22,7 +22,7 @@ Implements IFile
 		  
 		  RaiseEvent Progress(dlTotal, dlNow)
 		  
-		  If Not (mActionProgress Is Nil) Then mActionProgress.Invoke(dlTotal, dlNow, "", Idx)
+		  If Not (mActionProgress Is Nil) Then mActionProgress.Invoke(dlTotal, dlNow, "", mIdx)
 		  
 		End Function
 	#tag EndMethod
@@ -31,7 +31,7 @@ Implements IFile
 		Private Sub ClientTransferComplete(o As libcURL.cURLClient, BytesRead As Integer, BytesWritten As Integer)
 		  RaiseEvent Completed(mTmpFile)
 		  
-		  If Not (mActionCompleted Is Nil) Then mActionCompleted.Invoke(mTmpFile, Idx)
+		  If Not (mActionCompleted Is Nil) Then mActionCompleted.Invoke(mTmpFile, mIdx)
 		End Sub
 	#tag EndMethod
 
@@ -89,6 +89,12 @@ Implements IFile
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub SetIndex(Assigns idx As Integer)
+		  mIdx= idx
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub SetProgressAction(action As VideoDl.ActionProgress)
 		  mActionProgress= action
 		End Sub
@@ -122,10 +128,6 @@ Implements IFile
 	#tag EndHook
 
 
-	#tag Property, Flags = &h0
-		Idx As Integer
-	#tag EndProperty
-
 	#tag Property, Flags = &h21
 		Private mActionCompleted As VideoDl.ActionCompleted
 	#tag EndProperty
@@ -147,6 +149,10 @@ Implements IFile
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
+		Private mIdx As Integer
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
 		Private mPath As String
 	#tag EndProperty
 
@@ -160,11 +166,6 @@ Implements IFile
 
 
 	#tag ViewBehavior
-		#tag ViewProperty
-			Name="Idx"
-			Group="Behavior"
-			Type="Integer"
-		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Index"
 			Visible=true

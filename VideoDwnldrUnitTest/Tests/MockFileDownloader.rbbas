@@ -62,6 +62,12 @@ Implements VideoDl.IFile
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub SetIndex(Assigns idx As Integer)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub SetProgressAction(action As VideoDl.ActionProgress)
 		  // Parte de la interfaz VideoDl.IFile.
 		  

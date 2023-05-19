@@ -112,37 +112,6 @@ Begin Window UnitTestWindow
          Visible         =   True
          Width           =   80
       End
-      Begin PushButton PushButton2
-         AutoDeactivate  =   True
-         Bold            =   ""
-         ButtonStyle     =   0
-         Cancel          =   ""
-         Caption         =   "File"
-         Default         =   ""
-         Enabled         =   True
-         Height          =   30
-         HelpTag         =   ""
-         Index           =   -2147483648
-         InitialParent   =   "TabPanel1"
-         Italic          =   ""
-         Left            =   122
-         LockBottom      =   ""
-         LockedInPosition=   False
-         LockLeft        =   True
-         LockRight       =   ""
-         LockTop         =   True
-         Scope           =   0
-         TabIndex        =   1
-         TabPanelIndex   =   2
-         TabStop         =   True
-         TextFont        =   "System"
-         TextSize        =   16
-         TextUnit        =   0
-         Top             =   60
-         Underline       =   ""
-         Visible         =   True
-         Width           =   80
-      End
    End
    Begin Shell Cmd
       Arguments       =   ""
@@ -205,8 +174,6 @@ End
 	#tag Method, Flags = &h21
 		Private Sub DownloadCompleted(fileTemp As FolderItem, idx As Integer)
 		  System.DebugLog fileTemp.Name+ " completed!"
-		  
-		  PushButton2.Enabled= True
 		End Sub
 	#tag EndMethod
 
@@ -223,12 +190,20 @@ End
 
 	#tag Method, Flags = &h21
 		Private Sub HandlerAssets(assets() As VideoDl.IAsset)
-		  mVideoAssets= assets
+		  If assets.Ubound= -1 Then Return
 		  
-		  PushButton1.Enabled= True
+		  Dim rnd As New Random
+		  Dim idx As Integer= rnd.InRange(0, assets.Ubound)
+		  Dim file As VideoDl.IFile= assets(idx).File
+		  
+		  mDownloader.Asset(WeakAddressOf DownloadCompleted, WeakAddressOf DownloadProgress)= file
 		End Sub
 	#tag EndMethod
 
+
+	#tag Property, Flags = &h21
+		Private mDownloader As VideoDl.IDownloader
+	#tag EndProperty
 
 	#tag Property, Flags = &h21
 		Private mDownloadFiles() As VideoDl.IFile
@@ -236,14 +211,6 @@ End
 
 	#tag Property, Flags = &h21
 		Private mFFmpegMerge As VideoDl.FFmpeg
-	#tag EndProperty
-
-	#tag Property, Flags = &h21
-		Private mVideoAssets() As VideoDl.IAsset
-	#tag EndProperty
-
-	#tag Property, Flags = &h21
-		Private mVideoFile As VideoDl.IFile
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
@@ -256,6 +223,11 @@ End
 #tag Events PushButton1
 	#tag Event
 		Sub Action()
+		  If mDownloader Is Nil Then mDownloader= New VideoDl.Downloader
+		  mDownloader.Source= New VideoDl.Youtube("https://youtu.be/AA9Ybq5in-c")
+		  mDownloader.GetAssets WeakAddressOf HandlerAssets
+		  
+		  
 		  'If mFFmpegMerge Is Nil Then
 		  'mFFmpegMerge= New VideoDl.FFmpeg
 		  'mFFmpegMerge.Add SpecialFolder.Movies.Child("Scott Spark RC de Nino Schurter 🚀 #shorts #mtb-AA9Ybq5in-c.m4a")
@@ -266,14 +238,14 @@ End
 		  'End If
 		  
 		  
-		  If mVideoSource Is Nil Then
-		    Me.Enabled= False
-		    mVideoSource= New VideoDl.Youtube("https://youtu.be/AA9Ybq5in-c")
-		    mVideoSource.SetAssetsAction WeakAddressOf HandlerAssets
-		    mVideoSource.Start
-		  Else
-		    mVideoSource= Nil
-		  End If
+		  'If mVideoSource Is Nil Then
+		  'Me.Enabled= False
+		  'mVideoSource= New VideoDl.Youtube("https://youtu.be/AA9Ybq5in-c")
+		  'mVideoSource.SetAssetsAction WeakAddressOf HandlerAssets
+		  'mVideoSource.Start
+		  'Else
+		  'mVideoSource= Nil
+		  'End If
 		  
 		  
 		  'Me.Enabled= False
@@ -330,25 +302,6 @@ End
 		  'vcredistFile.SetCompletedAction(WeakAddressOf DownloadCompleted)
 		  'vcredistFile.Start
 		  'mDownloadFiles.Append vcredistFile
-		End Sub
-	#tag EndEvent
-#tag EndEvents
-#tag Events PushButton2
-	#tag Event
-		Sub Action()
-		  If mVideoAssets.Ubound= -1 Then Return
-		  If Not (mVideoFile Is Nil) Then
-		    mVideoFile= Nil
-		    Return
-		  End If
-		  
-		  Me.Enabled= False
-		  
-		  Dim asset As VideoDl.IAsset= mVideoAssets(11)
-		  mVideoFile= asset.File
-		  mVideoFile.SetProgressAction WeakAddressOf DownloadProgress
-		  mVideoFile.SetCompletedAction WeakAddressOf DownloadCompleted
-		  mVideoFile.Start
 		End Sub
 	#tag EndEvent
 #tag EndEvents

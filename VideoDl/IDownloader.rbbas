@@ -1,17 +1,22 @@
-#tag Class
-Protected Class FileDownloaderYoutubeDl
-Inherits VideoDl.FileDownloader
-	#tag Event
-		Sub Completed(ByRef fileTemp As FolderItem)
-		  If FolderToCopy Is Nil Then Return
-		  If Not FolderToCopy.Exists Then FolderToCopy.CreateAsFolder
-		  
-		  Dim fileNew As FolderItem= FolderToCopy.Child(kYoutubeDlFileName)
-		  fileTemp.CopyFileTo fileNew
-		  fileTemp= fileNew
+#tag Interface
+Protected Interface IDownloader
+	#tag Method, Flags = &h0
+		Sub Asset(completed As VideoDl.ActionCompleted, progress As VideoDl.ActionProgress, Assigns file As VideoDl.IFile)
 		  
 		End Sub
-	#tag EndEvent
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub GetAssets(action As VideoDl.ActionAssets)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Source(Assigns source As VideoDl.ISource)
+		  
+		End Sub
+	#tag EndMethod
 
 
 	#tag ViewBehavior
@@ -49,5 +54,5 @@ Inherits VideoDl.FileDownloader
 			InheritedFrom="Object"
 		#tag EndViewProperty
 	#tag EndViewBehavior
-End Class
-#tag EndClass
+End Interface
+#tag EndInterface

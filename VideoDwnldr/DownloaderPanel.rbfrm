@@ -184,7 +184,7 @@ End
 		  Dim list As Listbox= HistoryPanel1.HistoryLbx
 		  list.AddRow DownloadPanel.kLocInit
 		  list.RowTag(list.LastIndex)= ffmpegFile
-		  VideoDl.FileDownloaderFFmpeg(ffmpegFile).Idx= list.LastIndex
+		  ffmpegFile.SetIndex= list.LastIndex
 		  
 		  ffmpegFile.SetProgressAction WeakAddressOf HandlerProgress
 		  ffmpegFile.SetCompletedAction WeakAddressOf HandlerCompleted
@@ -205,7 +205,7 @@ End
 		  Dim list As Listbox= HistoryPanel1.HistoryLbx
 		  list.AddRow DownloadPanel.kLocInit
 		  list.RowTag(list.LastIndex)= youtubeFile
-		  VideoDl.FileDownloaderYoutubeDl(youtubeFile).Idx= list.LastIndex
+		  youtubeFile.SetIndex= list.LastIndex
 		  
 		  youtubeFile.SetProgressAction WeakAddressOf HandlerProgress
 		  youtubeFile.SetCompletedAction WeakAddressOf HandlerCompleted
@@ -290,31 +290,31 @@ End
 
 
 	#tag Constant, Name = kLocBytesOf, Type = String, Dynamic = False, Default = \"bytes de ", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"bytes de "
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"bytes de "
 	#tag EndConstant
 
 	#tag Constant, Name = kLocChangeName, Type = String, Dynamic = True, Default = \"please change name", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"cambie el nombre"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"cambie el nombre"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocCompleted, Type = String, Dynamic = True, Default = \"Completed!", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Completado!"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Completado!"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocConfig, Type = String, Dynamic = True, Default = \"Configuration", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Configuraci\xC3\xB3n"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Configuraci\xC3\xB3n"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocDownload, Type = String, Dynamic = True, Default = \"Download", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Descarga"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Descarga"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocFileExits, Type = String, Dynamic = True, Default = \"File exits!", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Archivo existe!"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Archivo existe!"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocHistory, Type = String, Dynamic = True, Default = \"History", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Historial"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Historial"
 	#tag EndConstant
 
 
@@ -345,21 +345,12 @@ End
 		  
 		  Dim asset As VideoDl.IAsset= Me.FormatsLbx.RowTag(Me.FormatsLbx.ListIndex)
 		  Dim json As JSONData= asset.Info
-		  Dim file As VideoDl.IFile
-		  
-		  Select Case Me.QualityCmb.Text
-		  Case Me.kLocBestQuality
-		    file= New VideoDl.YoutubeFile(json.Value("url").StringValue, "bestvideo+bestaudio")
-		  Case Me.kLocWorstQuality
-		    file= New VideoDl.YoutubeFile(json.Value("url").StringValue, "worstvideo+worstaudio")
-		  Case Else
-		    file= asset.File
-		  End Select
+		  Dim file As VideoDl.IFile= asset.File
 		  
 		  Dim list As Listbox= HistoryPanel1.HistoryLbx
 		  list.AddRow Me.kLocInit
 		  list.RowTag(list.LastIndex)= file
-		  VideoDl.YoutubeFile(file).Idx= list.LastIndex
+		  file.SetIndex= list.LastIndex
 		  
 		  file.SetProgressAction WeakAddressOf HandlerProgress
 		  file.SetCompletedAction WeakAddressOf HandlerCompleted

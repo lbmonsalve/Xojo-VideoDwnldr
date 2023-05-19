@@ -65,16 +65,16 @@ End
 	#tag EndMenuHandler
 
 
-	#tag Constant, Name = kLocAbout, Type = String, Dynamic = True, Default = \"VideoDwnldr \xC2\xA92023\r\rVersion: ", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"VideoDwnldr \xC2\xA92023\r\n\r\nVersi\xC3\xB3n: "
+	#tag Constant, Name = kLocAbout, Type = String, Dynamic = True, Default = \"VideoDownldr \xC2\xA92023\r\rVersion: ", Scope = Public
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"VideoDownldr \xC2\xA92023\r\n\r\nVersi\xC3\xB3n: "
 	#tag EndConstant
 
 	#tag Constant, Name = kLocWaitToDownloadSupportFiles, Type = String, Dynamic = True, Default = \"Wait to download support files...", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Espere terminar descarga archivos soporte..."
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Espere terminar descarga archivos soporte..."
 	#tag EndConstant
 
 	#tag Constant, Name = kLocWaitToDownloadVideos, Type = String, Dynamic = True, Default = \"Wait to download video(s)...", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Espere terminar descarga video(s)..."
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Espere terminar descarga video(s)..."
 	#tag EndConstant
 
 
