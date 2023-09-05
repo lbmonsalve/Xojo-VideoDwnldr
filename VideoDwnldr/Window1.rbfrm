@@ -57,7 +57,7 @@ End
 #tag WindowCode
 	#tag MenuHandler
 		Function HelpAbout() As Boolean Handles HelpAbout.Action
-			MsgBox kLocAbout+ App.ShortVersion
+			MsgBox kLocAbout.Replace("$1", App.ShortVersion).Replace("$2", VideoDl.Youtube.VersionExecutable)
 			
 			Return True
 			
@@ -65,8 +65,7 @@ End
 	#tag EndMenuHandler
 
 
-	#tag Constant, Name = kLocAbout, Type = String, Dynamic = True, Default = \"VideoDownldr \xC2\xA92023\r\rVersion: ", Scope = Public
-		#Tag Instance, Platform = Any, Language = es, Definition  = \"VideoDownldr \xC2\xA92023\r\n\r\nVersi\xC3\xB3n: "
+	#tag Constant, Name = kLocAbout, Type = String, Dynamic = True, Default = \"VideoDwnldr \xC2\xA92023\r\rApp: $1\ryt: $2", Scope = Public
 	#tag EndConstant
 
 	#tag Constant, Name = kLocWaitToDownloadSupportFiles, Type = String, Dynamic = True, Default = \"Wait to download support files...", Scope = Public

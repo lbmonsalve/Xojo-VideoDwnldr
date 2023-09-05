@@ -290,31 +290,31 @@ End
 
 
 	#tag Constant, Name = kLocBytesOf, Type = String, Dynamic = False, Default = \"bytes de ", Scope = Public
-		#Tag Instance, Platform = Any, Language = es, Definition  = \"bytes de "
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"bytes de "
 	#tag EndConstant
 
 	#tag Constant, Name = kLocChangeName, Type = String, Dynamic = True, Default = \"please change name", Scope = Public
-		#Tag Instance, Platform = Any, Language = es, Definition  = \"cambie el nombre"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"cambie el nombre"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocCompleted, Type = String, Dynamic = True, Default = \"Completed!", Scope = Public
-		#Tag Instance, Platform = Any, Language = es, Definition  = \"Completado!"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Completado!"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocConfig, Type = String, Dynamic = True, Default = \"Configuration", Scope = Public
-		#Tag Instance, Platform = Any, Language = es, Definition  = \"Configuraci\xC3\xB3n"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Configuraci\xC3\xB3n"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocDownload, Type = String, Dynamic = True, Default = \"Download", Scope = Public
-		#Tag Instance, Platform = Any, Language = es, Definition  = \"Descarga"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Descarga"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocFileExits, Type = String, Dynamic = True, Default = \"File exits!", Scope = Public
-		#Tag Instance, Platform = Any, Language = es, Definition  = \"Archivo existe!"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Archivo existe!"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocHistory, Type = String, Dynamic = True, Default = \"History", Scope = Public
-		#Tag Instance, Platform = Any, Language = es, Definition  = \"Historial"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Historial"
 	#tag EndConstant
 
 

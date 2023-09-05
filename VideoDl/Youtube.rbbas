@@ -49,7 +49,7 @@ Implements ISource
 		    elem.Value("protocol")= frmt.Mid(48, 5).Trim
 		    elem.Value("vcodec")= frmt.Mid(56, 17).Trim
 		    elem.Value("acodec")= frmt.Mid(74, 19).Trim
-		    elem.Value("moreinfo")= frmt.Mid(94).Trim
+		    elem.Value("moreinfo")= frmt.Mid(86).Trim
 		    
 		    assets.append New VideoDl.YoutubeAsset(elem)
 		  Next
@@ -102,7 +102,7 @@ Implements ISource
 		  If mVersionExecutable.Len> 0 Then Return mVersionExecutable
 		  
 		  Dim sh As New Shell
-		  sh.TimeOut= 3000
+		  sh.TimeOut= 5000
 		  sh.Execute Executable.ShellPath+ " --version"
 		  mVersionExecutable= sh.Result.Trim
 		  
