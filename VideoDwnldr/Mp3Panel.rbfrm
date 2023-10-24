@@ -1,5 +1,5 @@
 #tag Window
-Begin ContainerControl ConfigPanel
+Begin ContainerControl Mp3Panel
    AcceptFocus     =   True
    AcceptTabs      =   True
    AutoDeactivate  =   True
@@ -11,7 +11,7 @@ Begin ContainerControl ConfigPanel
    Height          =   300
    HelpTag         =   ""
    InitialParent   =   ""
-   Left            =   ""
+   Left            =   32
    LockBottom      =   ""
    LockLeft        =   ""
    LockRight       =   ""
@@ -19,11 +19,11 @@ Begin ContainerControl ConfigPanel
    TabIndex        =   0
    TabPanelIndex   =   0
    TabStop         =   True
-   Top             =   ""
+   Top             =   32
    UseFocusRing    =   ""
    Visible         =   True
    Width           =   400
-   Begin Listbox PropsLbx
+   Begin Listbox TagsLbx
       AutoDeactivate  =   True
       AutoHideScrollbars=   True
       Bold            =   ""
@@ -46,7 +46,7 @@ Begin ContainerControl ConfigPanel
       Hierarchical    =   ""
       Index           =   -2147483648
       InitialParent   =   ""
-      InitialValue    =   "#kLocProp	#kLocValue"
+      InitialValue    =   "#kLocTag	#kLocValue"
       Italic          =   ""
       Left            =   20
       LockBottom      =   True
@@ -116,6 +116,48 @@ Begin ContainerControl ConfigPanel
       Visible         =   True
       Width           =   90
    End
+   Begin TextField NameTxf
+      AcceptTabs      =   ""
+      Alignment       =   0
+      AutoDeactivate  =   True
+      AutomaticallyCheckSpelling=   False
+      BackColor       =   &hFFFFFF
+      Bold            =   ""
+      Border          =   False
+      CueText         =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Format          =   ""
+      Height          =   30
+      HelpTag         =   ""
+      Index           =   -2147483648
+      Italic          =   ""
+      Left            =   20
+      LimitText       =   0
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   False
+      Mask            =   ""
+      Password        =   ""
+      ReadOnly        =   False
+      Scope           =   0
+      TabIndex        =   2
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   ""
+      TextColor       =   &h000000FF
+      TextFont        =   "System"
+      TextSize        =   16
+      TextUnit        =   0
+      Top             =   250
+      Underline       =   False
+      UseFocusRing    =   True
+      Visible         =   True
+      Width           =   260
+   End
 End
 #tag EndWindow
 
@@ -125,23 +167,27 @@ End
 	#tag EndHook
 
 
-	#tag Constant, Name = kLocProp, Type = String, Dynamic = True, Default = \"Prop", Scope = Public
+	#tag Constant, Name = kLocSave, Type = String, Dynamic = True, Default = \"Save", Scope = Public
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Grabar"
 	#tag EndConstant
 
-	#tag Constant, Name = kLocSave, Type = String, Dynamic = True, Default = \"Save", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Grabar"
+	#tag Constant, Name = kLocTag, Type = String, Dynamic = False, Default = \"Tag", Scope = Public
 	#tag EndConstant
 
 	#tag Constant, Name = kLocValue, Type = String, Dynamic = True, Default = \"Value", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Valor"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Valor"
 	#tag EndConstant
 
 
 #tag EndWindowCode
 
-#tag Events PropsLbx
+#tag Events TagsLbx
 	#tag Event
 		Sub Open()
+		  Me.AddRow "Title", ""
+		  Me.AddRow "Artist", ""
+		  Me.AddRow "Album", ""
+		  Me.AddRow "Date", ""
 		  Me.ColumnType(1)= Listbox.TypeEditable
 		End Sub
 	#tag EndEvent
@@ -150,6 +196,13 @@ End
 	#tag Event
 		Sub Action()
 		  RaiseEvent SavePressed
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events NameTxf
+	#tag Event
+		Sub Open()
+		  Me.BackColor= Self.BackColor
 		End Sub
 	#tag EndEvent
 #tag EndEvents

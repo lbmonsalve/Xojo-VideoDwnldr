@@ -67,6 +67,33 @@ Protected Class FFmpeg
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Sub ToMP3(tofile As FolderItem, title As String, artist As String, album As String, date As String)
+		  Dim inputStr As String
+		  For Each file As FolderItem In mFiles
+		    inputStr= inputStr+ "-i """+ file.ShellPath+ """ "
+		  Next
+		  If inputStr.Len= 0 Then Return
+		  
+		  Dim cmdStr As String= kCmdToMp3.Replace("{EXE}", Executable.ShellPath)
+		  cmdStr= cmdStr.Replace("{INPUT}", inputStr).Replace("{OUTPUT}", tofile.ShellPath)
+		  cmdStr= cmdStr.Replace("%t", title).Replace("%a", artist).Replace("%al", album).Replace("%d", date)
+		  System.DebugLog CurrentMethodName+ " "+ cmdStr
+		  
+		  If mCmd Is Nil Then
+		    mCmd= New Shell
+		    mCmd.Mode= 1 // async
+		    AddHandler mCmd.Completed, WeakAddressOf CmdCompleted
+		  ElseIf mCmd.IsRunning Then
+		    System.DebugLog CurrentMethodName+ " mCmd.IsRunning"
+		    Return
+		  End If
+		  
+		  mFileTemp= toFile
+		  mCmd.Execute cmdStr
+		End Sub
+	#tag EndMethod
+
 
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
@@ -107,6 +134,10 @@ Protected Class FFmpeg
 	#tag Property, Flags = &h21
 		Private mFileTemp As FolderItem
 	#tag EndProperty
+
+
+	#tag Constant, Name = kCmdToMp3, Type = String, Dynamic = False, Default = \"{EXE} {INPUT} -metadata title\x3D\"%t\" -metadata artist\x3D\"%a\" -metadata album\x3D\"%al\" -metadata date\x3D\"%d\" -qscale:a 9 \"{OUTPUT}\" ", Scope = Private
+	#tag EndConstant
 
 
 	#tag ViewBehavior
