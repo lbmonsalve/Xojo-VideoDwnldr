@@ -216,47 +216,47 @@ End
 
 
 	#tag Constant, Name = kLocAvailableQuality, Type = String, Dynamic = True, Default = \"AvailableQuality", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"DisponibleCalidad"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"DisponibleCalidad"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocBestQuality, Type = String, Dynamic = True, Default = \"BestQuality", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"MejorCalidad"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"MejorCalidad"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocInit, Type = String, Dynamic = True, Default = \"Init...", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Iniciando..."
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Iniciando..."
 	#tag EndConstant
 
 	#tag Constant, Name = kLocMsgCVRA, Type = String, Dynamic = True, Default = \"Check video resolutions available", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Chequee resoluciones de video disponibles"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Chequee resoluciones de video disponibles"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocMsgSRD, Type = String, Dynamic = True, Default = \"Select download resolution", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Seleccione resolucion a descarga"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Seleccione resolucion a descarga"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocMsgWFAD, Type = String, Dynamic = True, Default = \"Write file address to download", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Escriba direcci\xC3\xB3n del archivo a descargar"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Escriba direcci\xC3\xB3n del archivo a descargar"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocNote, Type = String, Dynamic = True, Default = \"Note", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Nota"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Nota"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocResolution, Type = String, Dynamic = True, Default = \"Resolution", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Resoluci\xC3\xB3n"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Resoluci\xC3\xB3n"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocType, Type = String, Dynamic = True, Default = \"Type", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Tipo"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Tipo"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocUrl, Type = String, Dynamic = True, Default = \"URL / web address", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Direcci\xC3\xB3n web / URL"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Direcci\xC3\xB3n web / URL"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocWorstQuality, Type = String, Dynamic = True, Default = \"WorstQuality", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"MenorCalidad"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"MenorCalidad"
 	#tag EndConstant
 
 

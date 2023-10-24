@@ -164,6 +164,10 @@ End
 
 #tag WindowCode
 	#tag Hook, Flags = &h0
+		Event HistoryContextualMenuAction(hitItem As MenuItem) As Boolean
+	#tag EndHook
+
+	#tag Hook, Flags = &h0
 		Event MergePressed()
 	#tag EndHook
 
@@ -211,6 +215,28 @@ End
 		    End If
 		    g.FillRect 0 ,0 ,g.width, g.height
 		  End If
+		End Function
+	#tag EndEvent
+	#tag Event
+		Function ConstructContextualMenu(base as MenuItem, x as Integer, y as Integer) As Boolean
+		  If Me.SelCount= 1 Then
+		    For i As Integer= 0 To Me.ListCount- 1
+		      If Me.Selected(i) Then
+		        Dim fileName As String= Me.Cell(i, 0)
+		        If fileName.InStr(".m4a")> 0 Then
+		          base.Append New MenuItem("To MP3...", "toMp3")
+		        End If
+		        Return False
+		      End If
+		    Next
+		  End If
+		End Function
+	#tag EndEvent
+	#tag Event
+		Function ContextualMenuAction(hitItem as MenuItem) As Boolean
+		  If hitItem Is Nil Then Return False
+		  
+		  Return HistoryContextualMenuAction(hitItem)
 		End Function
 	#tag EndEvent
 #tag EndEvents

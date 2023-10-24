@@ -172,6 +172,19 @@ End
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Sub ConvertToMp3(params As Dictionary)
+		  Dim fromFile As New FolderItem(params.Value("fromFile").StringValue, FolderItem.PathTypeShell)
+		  Dim toFile As New FolderItem(params.Value("toFile").StringValue, FolderItem.PathTypeShell)
+		  
+		  mToMp3= New VideoDl.FFmpeg
+		  mToMp3.Add fromFile
+		  mToMp3.ToMP3 toFile, _
+		  params.Value("tagTitle").StringValue, params.Value("tagArtist").StringValue, _
+		  params.Value("tagAlbum").StringValue, params.Value("tagDate").StringValue
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h21
 		Private Sub DownloadFFmpeg()
 		  Dim pref As New VideoDl.Preferences
@@ -281,6 +294,10 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
+		Private mToMp3 As VideoDl.FFmpeg
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
 		Private mVideoMerge As VideoDl.FFmpeg
 	#tag EndProperty
 
@@ -290,31 +307,31 @@ End
 
 
 	#tag Constant, Name = kLocBytesOf, Type = String, Dynamic = False, Default = \"bytes de ", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"bytes de "
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"bytes de "
 	#tag EndConstant
 
 	#tag Constant, Name = kLocChangeName, Type = String, Dynamic = True, Default = \"please change name", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"cambie el nombre"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"cambie el nombre"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocCompleted, Type = String, Dynamic = True, Default = \"Completed!", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Completado!"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Completado!"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocConfig, Type = String, Dynamic = True, Default = \"Configuration", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Configuraci\xC3\xB3n"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Configuraci\xC3\xB3n"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocDownload, Type = String, Dynamic = True, Default = \"Download", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Descarga"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Descarga"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocFileExits, Type = String, Dynamic = True, Default = \"File exits!", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Archivo existe!"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Archivo existe!"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocHistory, Type = String, Dynamic = True, Default = \"History", Scope = Public
-		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Historial"
+		#Tag Instance, Platform = Any, Language = es, Definition  = \"Historial"
 	#tag EndConstant
 
 
@@ -401,6 +418,22 @@ End
 		  mVideoMerge.SetCompletedAction WeakAddressOf HandlerMergeCompleted
 		  mVideoMerge.Merge outputFile
 		End Sub
+	#tag EndEvent
+	#tag Event
+		Function HistoryContextualMenuAction(hitItem As MenuItem) As Boolean
+		  If hitItem.Tag= "toMp3" Then
+		    Dim list As Listbox= Me.HistoryLbx
+		    
+		    For i As Integer= 0 To list.ListCount- 1
+		      If list.Selected(i) Then
+		        Mp3Window.Mp3Panel1.NameTxf.HelpTag=  list.Cell(i, 0)
+		        Mp3Window.Mp3Panel1.NameTxf.Text=  list.Cell(i, 0).Replace(".m4a", ".mp3")
+		        Mp3Window.Show
+		        Return False
+		      End If
+		    Next
+		  End If
+		End Function
 	#tag EndEvent
 #tag EndEvents
 #tag Events ConfigPanel1
