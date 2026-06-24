@@ -173,24 +173,24 @@ End
 
 
 	#tag Constant, Name = kLocInvalidFileName, Type = String, Dynamic = True, Default = \"Invalid file name", Scope = Public
-		#Tag Instance, Platform = Any, Language = es, Definition  = \"Nombre archivo inv\xC3\xA1lido"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Nombre archivo inv\xC3\xA1lido"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocMerge, Type = String, Dynamic = True, Default = \"Merge", Scope = Public
-		#Tag Instance, Platform = Any, Language = es, Definition  = \"Mezcla"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Mezcla"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocMergeIsRunning, Type = String, Dynamic = True, Default = \"Merge is running", Scope = Public
-		#Tag Instance, Platform = Any, Language = es, Definition  = \"Procesando mezcla"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Procesando mezcla"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocMustBeSelectedTwoFiles, Type = String, Dynamic = True, Default = \"Must be selected two files (Ctrl+Click)", Scope = Public
-		#Tag Instance, Platform = Any, Language = es, Definition  = \"Debe seleccionar dos archivos (Ctrl+Clic)"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Debe seleccionar dos archivos (Ctrl+Clic)"
 	#tag EndConstant
 
 	#tag Constant, Name = kSep, Type = String, Dynamic = True, Default = \"\\", Scope = Public
 		#Tag Instance, Platform = Mac OS, Language = Default, Definition  = \"\\"
-		#Tag Instance, Platform = Any, Language = Default, Definition  = \"/"
+		#Tag Instance, Platform = Cualquiera, Language = Default, Definition  = \"/"
 		#Tag Instance, Platform = Mac Classic, Language = Default, Definition  = \"/"
 	#tag EndConstant
 

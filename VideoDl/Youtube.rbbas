@@ -23,33 +23,31 @@ Implements ISource
 		  End If
 		  
 		  Dim out As String= o.ReadAll.DefineEncoding(Encodings.UTF8)
-		  Dim lines() As String= out.Split(EndOfLine.UNIX)
-		  Dim frmts() As String, addFrmts As Boolean
+		  Dim json1 As New JSONData(out.Mid(out.InStr("{")))
+		  Dim formats As JSONData= json1.Value("formats")
+		  If formats Is Nil Or Not (formats.IsArray) Then
+		    System.DebugLog CurrentMethodName+ " formats Is Nil Or Not (formats.IsArray)"
+		    Return
+		  End If
 		  
-		  For Each line As String In lines
-		    If addFrmts And line.Len> 0 Then
-		      If line.InStr("ID ")= 0 And line.InStr("---")= 0 Then
-		        frmts.Append line
-		      End If
-		    ElseIf line.InStr("[info]")> 0 Then
-		      addFrmts= True
-		    End If
-		  Next
+		  Const kNone= "none"
 		  
-		  For Each frmt As String In frmts
+		  For i As Integer= 0 To formats.Count- 1
+		    Dim format As JSONData= formats.Child(i)
 		    Dim elem As New JSONData
+		    
 		    elem.Value("url")= mUrl
-		    elem.Value("id")= frmt.Mid(1, 3).Trim
-		    elem.Value("ext")= frmt.Mid(5, 5).Trim
-		    elem.Value("resolution")= frmt.Mid(11, 11).Trim
-		    elem.Value("fps")= frmt.Mid(23, 3).Trim
-		    elem.Value("channels")= frmt.Mid(26, 2).Trim
-		    elem.Value("fileSize")= frmt.Mid(30, 9).Trim
-		    elem.Value("bitrate")= frmt.Mid(42, 4).Trim
-		    elem.Value("protocol")= frmt.Mid(48, 5).Trim
-		    elem.Value("vcodec")= frmt.Mid(56, 17).Trim
-		    elem.Value("acodec")= frmt.Mid(74, 19).Trim
-		    elem.Value("moreinfo")= frmt.Mid(86).Trim
+		    elem.Value("id")= format.Lookup("format_id", kNone).StringValue
+		    elem.Value("ext")= format.Lookup("ext", kNone).StringValue
+		    elem.Value("resolution")= format.Lookup("resolution", kNone).StringValue
+		    elem.Value("fps")= format.Lookup("fps", kNone).StringValue
+		    elem.Value("channels")= format.Lookup("audio_channels", kNone).StringValue
+		    elem.Value("fileSize")= format.Lookup("fileSize", kNone).StringValue
+		    elem.Value("bitrate")= format.Lookup("tbr", kNone).StringValue
+		    elem.Value("protocol")= format.Lookup("protocol", kNone).StringValue
+		    elem.Value("vcodec")= format.Lookup("vcodec", kNone).StringValue
+		    elem.Value("acodec")= format.Lookup("acodec", kNone).StringValue
+		    elem.Value("moreinfo")= format.Lookup("format", kNone).StringValue
 		    
 		    assets.append New VideoDl.YoutubeAsset(elem)
 		  Next
@@ -92,7 +90,7 @@ Implements ISource
 		    Return
 		  End If
 		  
-		  mCmd.Execute Executable.ShellPath+ " --verbose -F "+ mUrl
+		  mCmd.Execute Executable.ShellPath+ " -F -j "+ mUrl
 		End Sub
 	#tag EndMethod
 
