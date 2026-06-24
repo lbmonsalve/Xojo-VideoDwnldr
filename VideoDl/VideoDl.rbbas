@@ -80,7 +80,7 @@ Protected Module VideoDl
 	#tag Constant, Name = kFfmpegFolderName, Type = String, Dynamic = False, Default = \"ffmpeg", Scope = Public
 	#tag EndConstant
 
-	#tag Constant, Name = kYoutubeDlFileName, Type = String, Dynamic = False, Default = \"youtube-dl.exe", Scope = Private
+	#tag Constant, Name = kYoutubeDlFileName, Type = String, Dynamic = False, Default = \"yt-dlp.exe", Scope = Private
 	#tag EndConstant
 
 	#tag Constant, Name = kYoutubeDlFolderName, Type = String, Dynamic = False, Default = \"youtube-dl", Scope = Public

@@ -38,6 +38,7 @@ Implements ISource
 		    
 		    elem.Value("url")= mUrl
 		    elem.Value("id")= format.Lookup("format_id", kNone).StringValue
+		    elem.Value("format_note")= format.Lookup("format_note", kNone).StringValue
 		    elem.Value("ext")= format.Lookup("ext", kNone).StringValue
 		    elem.Value("resolution")= format.Lookup("resolution", kNone).StringValue
 		    elem.Value("fps")= format.Lookup("fps", kNone).StringValue
@@ -100,7 +101,7 @@ Implements ISource
 		  If mVersionExecutable.Len> 0 Then Return mVersionExecutable
 		  
 		  Dim sh As New Shell
-		  sh.TimeOut= 5000
+		  sh.TimeOut= 10000
 		  sh.Execute Executable.ShellPath+ " --version"
 		  mVersionExecutable= sh.Result.Trim
 		  

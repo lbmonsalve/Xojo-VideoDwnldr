@@ -50,7 +50,7 @@ Begin ContainerControl DownloaderPanel
       TextUnit        =   0
       Top             =   0
       Underline       =   ""
-      Value           =   2
+      Value           =   0
       Visible         =   True
       Width           =   600
       Begin DownloadPanel DownloadPanel1
@@ -237,9 +237,24 @@ End
 		  Dim list As Listbox= DownloadPanel1.FormatsLbx
 		  list.DeleteAllRows
 		  
+		  Const kNone= "none"
+		  
 		  For Each asset As VideoDl.IAsset In assets
 		    Dim json As JSONData= asset.Info
-		    list.AddRow json.Value("ext").StringValue, json.Value("resolution").StringValue, json.Value("moreinfo").StringValue
+		    Dim formatNote As String= json.Value("format_note").StringValue
+		    Dim acodec As String= json.Value("acodec").StringValue
+		    Dim vcodec As String= json.Value("vcodec").StringValue
+		    
+		    If acodec= kNone And vcodec<> kNone Then
+		      formatNote= vcodec
+		    ElseIf acodec<> kNone And vcodec= kNone Then
+		      formatNote= acodec
+		    End If
+		    
+		    list.AddRow json.Value("ext").StringValue, _
+		    json.Value("resolution").StringValue, _
+		    formatNote, _
+		    json.Value("moreinfo").StringValue
 		    list.RowTag(list.LastIndex)= asset
 		  Next
 		  
