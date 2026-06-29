@@ -1,6 +1,12 @@
 #tag Interface
 Protected Interface ISource
 	#tag Method, Flags = &h0
+		Function GetFileData() As JSONData
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub SetAssetsAction(action As VideoDl.ActionAssets)
 		  
 		End Sub

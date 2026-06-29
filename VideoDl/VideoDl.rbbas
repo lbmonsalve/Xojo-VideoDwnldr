@@ -36,6 +36,21 @@ Protected Module VideoDl
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
+		Private Function GetFormatedSize(value As UInt64) As String
+		  Select Case value
+		  Case Is< 1000
+		    Return Format(value, "##0\B")
+		  Case Is< 1000000
+		    Return Str(value/ 1000, "##0.0\K")
+		  Case Is< 1000000000
+		    Return Str(value/ 1000000, "##0.0\M")
+		  Case Else
+		    Return Str(value/ (1000000* 1000), "###0.0\G")
+		  End Select
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
 		Private Function GetName(folder As FolderItem, baseName As String) As String
 		  Static ext As UInt16
 		  Dim name As String
@@ -46,6 +61,32 @@ Protected Module VideoDl
 		  Loop Until Not folder.Child(name).Exists
 		  
 		  Return name
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function GetValidName(value As String) As String
+		  Dim result As String= value.Trim
+		  
+		  #if TargetWin32
+		    If result.Right(1)= "." Then result= result.Left(result.Len- 1)
+		    
+		    Dim inames() As String= Split(kInvalidNames, ",")
+		    For i As Integer= 0 To inames.Ubound
+		      Dim search As String= inames(i)
+		      If result= search Then Return "invalid name ("+ search+ ")"
+		    Next
+		    
+		    For i As Integer= 1 To Len(kInvalidNamechars)
+		      Dim ch As String= Mid(kInvalidNamechars, i, 1)
+		      result= ReplaceAll(result, ch, "_")
+		    Next
+		    
+		  #else
+		    result= result.ReplaceAll("/", "_")
+		  #endif
+		  
+		  Return result.Left(255)
 		End Function
 	#tag EndMethod
 
@@ -78,6 +119,12 @@ Protected Module VideoDl
 	#tag EndConstant
 
 	#tag Constant, Name = kFfmpegFolderName, Type = String, Dynamic = False, Default = \"ffmpeg", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = kInvalidNamechars, Type = String, Dynamic = False, Default = \"<>:\"/\\|\?*\xEF\xBD\x9C\xEF\xBC\x9E\xE2\x89\xBA\xE2\x88\x97\xE2\x88\xB6\xEF\xBC\x9F \xE2\x88\x95", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = kInvalidNames, Type = String, Dynamic = False, Default = \"CON\x2CPRN\x2CAUX\x2CNUL\x2CCOM1\x2CCOM2\x2CCOM3\x2CCOM4\x2CCOM5\x2CCOM5\x2CCOM7\x2CCOM8\x2CCOM9\x2CLPT1\x2CLPT2\x2CLPT3\x2CLPT4\x2CLPT5\x2CLPT6\x2CLPT7\x2CLPT8\x2C LPT9", Scope = Private
 	#tag EndConstant
 
 	#tag Constant, Name = kYoutubeDlFileName, Type = String, Dynamic = False, Default = \"yt-dlp.exe", Scope = Private

@@ -254,9 +254,13 @@ End
 		    list.AddRow json.Value("ext").StringValue, _
 		    json.Value("resolution").StringValue, _
 		    formatNote, _
+		    json.Value("fileSize").StringValue, _
 		    json.Value("moreinfo").StringValue
 		    list.RowTag(list.LastIndex)= asset
 		  Next
+		  
+		  DownloadPanel1.NameTxf.Text= VideoDl.GetValidName(_
+		  mVideoSource.GetFileData.Lookup("title", "").StringValue)
 		  
 		  DownloadPanel1.CheckBtn.Enabled= True
 		End Sub

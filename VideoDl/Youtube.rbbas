@@ -43,7 +43,7 @@ Implements ISource
 		    elem.Value("resolution")= format.Lookup("resolution", kNone).StringValue
 		    elem.Value("fps")= format.Lookup("fps", kNone).StringValue
 		    elem.Value("channels")= format.Lookup("audio_channels", kNone).StringValue
-		    elem.Value("fileSize")= format.Lookup("fileSize", kNone).StringValue
+		    elem.Value("fileSize")= GetFormatedSize(format.Lookup("filesize", kNone).UInt64Value)
 		    elem.Value("bitrate")= format.Lookup("tbr", kNone).StringValue
 		    elem.Value("protocol")= format.Lookup("protocol", kNone).StringValue
 		    elem.Value("vcodec")= format.Lookup("vcodec", kNone).StringValue
@@ -52,6 +52,8 @@ Implements ISource
 		    
 		    assets.append New VideoDl.YoutubeAsset(elem)
 		  Next
+		  
+		  mFileData= json1
 		  
 		  mActionAssets.Invoke assets
 		End Sub
@@ -67,6 +69,12 @@ Implements ISource
 		Sub Destructor()
 		  Close
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function GetFileData() As JSONData
+		  Return mFileData
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -215,6 +223,10 @@ Implements ISource
 
 	#tag Property, Flags = &h21
 		Private Shared mExecutable As FolderItem
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mFileData As JSONData
 	#tag EndProperty
 
 	#tag Property, Flags = &h21

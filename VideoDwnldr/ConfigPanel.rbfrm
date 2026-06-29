@@ -33,7 +33,7 @@ Begin ContainerControl ConfigPanel
       ColumnWidths    =   "20%,80%"
       DataField       =   ""
       DataSource      =   ""
-      DefaultRowHeight=   26
+      DefaultRowHeight=   30
       Enabled         =   True
       EnableDrag      =   ""
       EnableDragReorder=   ""
@@ -144,6 +144,15 @@ End
 		Sub Open()
 		  Me.ColumnType(1)= Listbox.TypeEditable
 		End Sub
+	#tag EndEvent
+	#tag Event
+		Function CellBackgroundPaint(g As Graphics, row As Integer, column As Integer) As Boolean
+		  If row Mod 2 = 0 then g.foreColor = &cFFF5EC00 else g.foreColor = &cF4EAFF00
+		  
+		  If row< Me.ListCount Then
+		    g.FillRect 0, 0, g.width, g.height
+		  End If
+		End Function
 	#tag EndEvent
 #tag EndEvents
 #tag Events SaveBtn

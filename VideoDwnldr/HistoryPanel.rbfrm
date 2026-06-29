@@ -33,7 +33,7 @@ Begin ContainerControl HistoryPanel
       ColumnWidths    =   "*,*"
       DataField       =   ""
       DataSource      =   ""
-      DefaultRowHeight=   26
+      DefaultRowHeight=   30
       Enabled         =   True
       EnableDrag      =   ""
       EnableDragReorder=   ""
@@ -201,7 +201,22 @@ End
 	#tag Event
 		Function CellClick(row as Integer, column as Integer, x as Integer, y as Integer) As Boolean
 		  If column= 0 Then
-		    NameTxf.Text= Me.Cell(row, 0)
+		    Dim pathfile As String= Me.Cell(row, 0)
+		    Try
+		      Dim namefile As String
+		      Dim rg As New RegEx
+		      rg.SearchPattern= "[^\\/]+(?=\.[^\\/.]+$)"
+		      Dim match As RegExMatch= rg.Search(pathfile)
+		      If Not (match Is Nil) Then
+		        nameFile= match.SubExpressionString(0)
+		        Dim folder As String= pathfile.Left(pathfile.InStr(nameFile)).Trim
+		        NameTxf.Text= folder+ GetValidName(nameFile)
+		      Else
+		        NameTxf.Text= pathfile
+		      End If
+		    Catch exc As RuntimeException
+		      NameTxf.Text= pathfile
+		    End Try
 		  End If
 		End Function
 	#tag EndEvent

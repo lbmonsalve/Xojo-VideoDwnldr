@@ -114,12 +114,12 @@ Begin ContainerControl DownloadPanel
       AutoHideScrollbars=   True
       Bold            =   ""
       Border          =   True
-      ColumnCount     =   4
+      ColumnCount     =   5
       ColumnsResizable=   True
-      ColumnWidths    =   "10%,20%,30%,40%"
+      ColumnWidths    =   "10%,20%,20%,20%,30%"
       DataField       =   ""
       DataSource      =   ""
-      DefaultRowHeight=   26
+      DefaultRowHeight=   30
       Enabled         =   True
       EnableDrag      =   ""
       EnableDragReorder=   ""
@@ -132,7 +132,7 @@ Begin ContainerControl DownloadPanel
       Hierarchical    =   ""
       Index           =   -2147483648
       InitialParent   =   ""
-      InitialValue    =   "#kLocType	#kLocResolution	#kLocCodec	#kLocNote"
+      InitialValue    =   "#kLocType	#kLocResolution	#kLocCodec	#kLocSize	#kLocNote"
       Italic          =   ""
       Left            =   20
       LockBottom      =   True
@@ -202,6 +202,48 @@ Begin ContainerControl DownloadPanel
       Visible         =   True
       Width           =   90
    End
+   Begin TextField NameTxf
+      AcceptTabs      =   ""
+      Alignment       =   0
+      AutoDeactivate  =   True
+      AutomaticallyCheckSpelling=   False
+      BackColor       =   &hFFFFFF
+      Bold            =   ""
+      Border          =   False
+      CueText         =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Format          =   ""
+      Height          =   30
+      HelpTag         =   ""
+      Index           =   -2147483648
+      Italic          =   ""
+      Left            =   20
+      LimitText       =   0
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   False
+      Mask            =   ""
+      Password        =   ""
+      ReadOnly        =   False
+      Scope           =   0
+      TabIndex        =   5
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   ""
+      TextColor       =   &h000000FF
+      TextFont        =   "System"
+      TextSize        =   16
+      TextUnit        =   0
+      Top             =   250
+      Underline       =   False
+      UseFocusRing    =   True
+      Visible         =   True
+      Width           =   260
+   End
 End
 #tag EndWindow
 
@@ -213,6 +255,15 @@ End
 	#tag Hook, Flags = &h0
 		Event DownloadPressed()
 	#tag EndHook
+
+
+	#tag Property, Flags = &h21
+		Private mBackColorEven As Color = &cF2FFF200
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mBackColorOdd As Color = &cFFFFE800
+	#tag EndProperty
 
 
 	#tag Constant, Name = kLocAvailableQuality, Type = String, Dynamic = True, Default = \"AvailableQuality", Scope = Public
@@ -251,6 +302,10 @@ End
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Resoluci\xC3\xB3n"
 	#tag EndConstant
 
+	#tag Constant, Name = kLocSize, Type = String, Dynamic = True, Default = \"Size", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Tama\xC3\xB1o"
+	#tag EndConstant
+
 	#tag Constant, Name = kLocType, Type = String, Dynamic = True, Default = \"Type", Scope = Public
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Tipo"
 	#tag EndConstant
@@ -273,10 +328,26 @@ End
 		End Sub
 	#tag EndEvent
 #tag EndEvents
+#tag Events FormatsLbx
+	#tag Event
+		Function CellBackgroundPaint(g As Graphics, row As Integer, column As Integer) As Boolean
+		  If row Mod 2 = 0 then g.foreColor = mBackColorEven else g.foreColor = mBackColorOdd
+		  
+		  g.FillRect 0, 0, g.width, g.height
+		End Function
+	#tag EndEvent
+#tag EndEvents
 #tag Events DownloadBtn
 	#tag Event
 		Sub Action()
 		  RaiseEvent DownloadPressed
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events NameTxf
+	#tag Event
+		Sub Open()
+		  Me.BackColor= Self.BackColor
 		End Sub
 	#tag EndEvent
 #tag EndEvents
