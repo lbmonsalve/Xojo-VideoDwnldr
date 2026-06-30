@@ -202,21 +202,10 @@ End
 		Function CellClick(row as Integer, column as Integer, x as Integer, y as Integer) As Boolean
 		  If column= 0 Then
 		    Dim pathfile As String= Me.Cell(row, 0)
-		    Try
-		      Dim namefile As String
-		      Dim rg As New RegEx
-		      rg.SearchPattern= "[^\\/]+(?=\.[^\\/.]+$)"
-		      Dim match As RegExMatch= rg.Search(pathfile)
-		      If Not (match Is Nil) Then
-		        nameFile= match.SubExpressionString(0)
-		        Dim folder As String= pathfile.Left(pathfile.InStr(nameFile)).Trim
-		        NameTxf.Text= folder+ GetValidName(nameFile)
-		      Else
-		        NameTxf.Text= pathfile
-		      End If
-		    Catch exc As RuntimeException
-		      NameTxf.Text= pathfile
-		    End Try
+		    Dim namefile As String= pathfile.GetFileNameFromPath
+		    Dim folder As String= pathfile.GetFullPath
+		    
+		    NameTxf.Text= folder+ nameFile.GetValidName
 		  End If
 		End Function
 	#tag EndEvent

@@ -168,14 +168,14 @@ End
 
 
 	#tag Constant, Name = kLocSave, Type = String, Dynamic = True, Default = \"Save", Scope = Public
-		#Tag Instance, Platform = Any, Language = es, Definition  = \"Grabar"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Grabar"
 	#tag EndConstant
 
 	#tag Constant, Name = kLocTag, Type = String, Dynamic = False, Default = \"Tag", Scope = Public
 	#tag EndConstant
 
 	#tag Constant, Name = kLocValue, Type = String, Dynamic = True, Default = \"Value", Scope = Public
-		#Tag Instance, Platform = Any, Language = es, Definition  = \"Valor"
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Valor"
 	#tag EndConstant
 
 

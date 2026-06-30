@@ -259,8 +259,8 @@ End
 		    list.RowTag(list.LastIndex)= asset
 		  Next
 		  
-		  DownloadPanel1.NameTxf.Text= VideoDl.GetValidName(_
-		  mVideoSource.GetFileData.Lookup("title", "").StringValue)
+		  DownloadPanel1.NameTxf.Text= _
+		  mVideoSource.GetFileData.Lookup("title", "").StringValue.GetValidName
 		  
 		  DownloadPanel1.CheckBtn.Enabled= True
 		End Sub
@@ -445,8 +445,13 @@ End
 		    
 		    For i As Integer= 0 To list.ListCount- 1
 		      If list.Selected(i) Then
-		        Mp3Window.Mp3Panel1.NameTxf.HelpTag=  list.Cell(i, 0)
-		        Mp3Window.Mp3Panel1.NameTxf.Text=  list.Cell(i, 0).Replace(".m4a", ".mp3")
+		        Dim pathfile As String= list.Cell(i, 0)
+		        Dim namefile As String= pathfile.GetFileNameFromPath
+		        Dim folder As String= pathfile.GetFullPath
+		        Dim name As String= folder+ nameFile.GetValidName
+		        
+		        Mp3Window.Mp3Panel1.NameTxf.HelpTag= list.Cell(i, 0)
+		        Mp3Window.Mp3Panel1.NameTxf.Text= name.Replace(".m4a", ".mp3")
 		        Mp3Window.Show
 		        Return False
 		      End If
