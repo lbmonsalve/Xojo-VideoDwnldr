@@ -158,7 +158,7 @@ Begin ContainerControl ConfigPanel
       Underline       =   False
       Value           =   False
       Visible         =   True
-      Width           =   100
+      Width           =   120
    End
 End
 #tag EndWindow

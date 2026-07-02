@@ -289,11 +289,13 @@ End
 	#tag Method, Flags = &h21
 		Private Sub HandlerDenoCompleted(fileTemp As FolderItem, idx As Integer)
 		  If fileTemp Is Nil Then
-		    MsgBox "Download file error!"
+		    MsgBox kLocDownloadFileError
+		    ConfigPanel1.DenoBtn.Enabled= True
 		    Return
 		  End If
 		  
-		  System.DebugLog CurrentMethodName
+		  System.DebugLog CurrentMethodName+ " ini"
+		  ConfigPanel1.DenoBtn.Caption= kLocUnzipping
 		  
 		  Dim list As Listbox= HistoryPanel1.HistoryLbx
 		  list.Cell(idx, 0)= fileTemp.AbsoluteNativePath
@@ -303,14 +305,16 @@ End
 		    
 		    For i As Integer= 0 To files.Ubound
 		      Dim file As FolderItem= files(i)
-		      If file.Name.InStr("deno")= 0 Then Continue
+		      If file.Name.InStr(kDenoFileName)= 0 Then Continue
+		      
+		      ConfigPanel1.DenoBtn.Caption= kLocInstalling
 		      
 		      Dim sh As New Shell
 		      sh.Mode= 1
 		      AddHandler sh.Completed, WeakAddressOf HandlerDenoRunCompleted
-		      sh.Execute file.ShellPath
+		      sh.Execute "type "+ file.ShellPath
 		      
-		      list.CellTag(idx, 1)= sh
+		      System.DebugLog file.ShellPath
 		      
 		      mDenoStatus= 1
 		    Next
@@ -318,13 +322,16 @@ End
 		    System.DebugLog CurrentMethodName+ " e.Message: "+ e.Message
 		  End Try
 		  
-		  ConfigPanel1.DenoBtn.Enabled= True
+		  System.DebugLog CurrentMethodName+ " end"
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
 		Private Sub HandlerDenoRunCompleted(o As Shell)
 		  System.DebugLog CurrentMethodName+ " resultCode:"+ Str(o.ErrorCode)
+		  
+		  ConfigPanel1.DenoBtn.Caption= "Chk Deno..."
+		  ConfigPanel1.DenoBtn.Enabled= True
 		  
 		  mDenoStatus= 2
 		End Sub
@@ -373,6 +380,16 @@ End
 	#tag EndProperty
 
 
+	#tag Constant, Name = kDenoFileName, Type = String, Dynamic = False, Default = \"deno", Scope = Private
+		#Tag Instance, Platform = Mac OS, Language = Default, Definition  = \"deno.exe"
+		#Tag Instance, Platform = Mac Classic, Language = Default, Definition  = \"deno"
+		#Tag Instance, Platform = -, Language = Default, Definition  = \"deno"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocAparentementeNoEstáInstalado, Type = String, Dynamic = False, Default = \"It doesn\'t appear to be installed; it requires a JS runtime\rlike \"deno\" to download certain media...\r", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Aparentemente no est\xC3\xA1 instalado\x2C necesita un runtime JS\r\ncomo \"\"deno\"\" para bajar ciertos media...\r\n"
+	#tag EndConstant
+
 	#tag Constant, Name = kLocBytesOf, Type = String, Dynamic = False, Default = \"bytes de ", Scope = Public
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"bytes de "
 	#tag EndConstant
@@ -389,8 +406,24 @@ End
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Configuraci\xC3\xB3n"
 	#tag EndConstant
 
+	#tag Constant, Name = kLocDescargarEInstalar, Type = String, Dynamic = False, Default = \"\xC2\xBFDescargar e instalar\?", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"\xC2\xBFDescargar e instalar\?"
+	#tag EndConstant
+
 	#tag Constant, Name = kLocDownload, Type = String, Dynamic = True, Default = \"Download", Scope = Public
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Descarga"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocDownloadAndInstallDeno, Type = String, Dynamic = False, Default = \"Download and install \"Deno\"\?", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"\xC2\xBFDescargar e instalar \"deno\"\?"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocDownloadFileError, Type = String, Dynamic = False, Default = \"Download file error!", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Error en archivo descargado!"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocDownloading, Type = String, Dynamic = False, Default = \"Downloading...", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Descargando..."
 	#tag EndConstant
 
 	#tag Constant, Name = kLocFileExits, Type = String, Dynamic = True, Default = \"File exits!", Scope = Public
@@ -399,6 +432,26 @@ End
 
 	#tag Constant, Name = kLocHistory, Type = String, Dynamic = True, Default = \"History", Scope = Public
 		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Historial"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocInstalling, Type = String, Dynamic = False, Default = \"Installing...", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Instalando..."
+	#tag EndConstant
+
+	#tag Constant, Name = kLocNoDenoUrlTryDeletePreferencesjsonFile, Type = String, Dynamic = False, Default = \"no deno URL\x2C try delete preferences.json file", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"no deno URL\x2C trate borrar archivo preferences.json"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocProcessed, Type = String, Dynamic = False, Default = \"Processed!", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Procesado!"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocProcessingWaitAndRetry, Type = String, Dynamic = False, Default = \"Processing\x2C wait and re-try!", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Procesando\x2C espere y reintente!"
+	#tag EndConstant
+
+	#tag Constant, Name = kLocUnzipping, Type = String, Dynamic = False, Default = \"Unzipping...", Scope = Public
+		#Tag Instance, Platform = Cualquiera, Language = es, Definition  = \"Descomprim..."
 	#tag EndConstant
 
 
@@ -553,36 +606,38 @@ End
 		  sh.Execute "deno --version"
 		  denoVersion= sh.Result.Trim
 		  
-		  'If denoVersion.InStr("""deno""")= 0 Then
-		  'MsgBox denoVersion
-		  'Return
-		  'End If
+		  If denoVersion.InStr("""deno""")= 0 Then
+		    MsgBox denoVersion
+		    Return
+		  End If
 		  
 		  If mDenoStatus= 1 Then
-		    MsgBox "procesando, espere y vuelva intentar!"
+		    MsgBox kLocProcessingWaitAndRetry
 		    Return
 		  ElseIf mDenoStatus= 2 Then
-		    MsgBox "procesado!"
+		    MsgBox kLocProcessed
 		    Return
 		  End If
 		  
 		  Dim dlg As New MessageDialog
 		  dlg.Icon= MessageDialog.GraphicQuestion
-		  dlg.ActionButton.Caption= "¿Descargar e instalar?"
+		  dlg.ActionButton.Caption= kLocDescargarEInstalar
 		  dlg.CancelButton.Visible= True
-		  dlg.Message= "¿Descargar e instalar ""deno""?"
-		  dlg.Explanation= "Aparentemente no está instalado, necesita un runtime JS"+ _
-		  EndOfLine+ "como ""deno"" para bajar ciertos media..."+ EndOfLine
+		  dlg.Message= kLocDownloadAndInstallDeno
+		  dlg.Explanation= kLocAparentementeNoEstáInstalado
 		  
 		  Dim dlgBtn As MessageDialogButton= dlg.ShowModal
 		  
 		  If dlgBtn= dlg.CancelButton Then Return
 		  
+		  Me.DenoBtn.Enabled= False
+		  Me.DenoBtn.Caption= kLocDownloading
+		  
 		  Dim pref As New VideoDl.Preferences
 		  Dim json As JSONData= pref.File.OpenAsJSONData
 		  Dim urlStr As String= json.Lookup(VideoDl.Preferences.kUrl_deno, "").StringValue
 		  If urlStr= "" Then
-		    MsgBox "no deno URL, trate borrar archivo preferences.json"
+		    MsgBox kLocNoDenoUrlTryDeletePreferencesjsonFile
 		    Return
 		  End If
 		  
@@ -596,8 +651,6 @@ End
 		  denoFile.SetProgressAction WeakAddressOf HandlerProgress
 		  denoFile.SetCompletedAction WeakAddressOf HandlerDenoCompleted
 		  denoFile.Start
-		  
-		  Me.DenoBtn.Enabled= False
 		End Sub
 	#tag EndEvent
 #tag EndEvents
