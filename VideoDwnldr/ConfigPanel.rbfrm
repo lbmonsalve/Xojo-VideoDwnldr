@@ -116,10 +116,58 @@ Begin ContainerControl ConfigPanel
       Visible         =   True
       Width           =   90
    End
+   Begin BevelButton DenoBtn
+      AcceptFocus     =   False
+      AutoDeactivate  =   True
+      BackColor       =   "&c00000000"
+      Bevel           =   0
+      Bold            =   False
+      ButtonType      =   0
+      Caption         =   "Chk Deno..."
+      CaptionAlign    =   3
+      CaptionDelta    =   0
+      CaptionPlacement=   1
+      Enabled         =   True
+      HasBackColor    =   False
+      HasMenu         =   0
+      Height          =   30
+      HelpTag         =   ""
+      Icon            =   ""
+      IconAlign       =   0
+      IconDX          =   0
+      IconDY          =   0
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   20
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   False
+      MenuValue       =   0
+      Scope           =   0
+      TabIndex        =   2
+      TabPanelIndex   =   0
+      TabStop         =   True
+      TextColor       =   "&c00000000"
+      TextFont        =   "System"
+      TextSize        =   16
+      TextUnit        =   0
+      Top             =   252
+      Underline       =   False
+      Value           =   False
+      Visible         =   True
+      Width           =   100
+   End
 End
 #tag EndWindow
 
 #tag WindowCode
+	#tag Hook, Flags = &h0
+		Event DenoPressed()
+	#tag EndHook
+
 	#tag Hook, Flags = &h0
 		Event SavePressed()
 	#tag EndHook
@@ -159,6 +207,13 @@ End
 	#tag Event
 		Sub Action()
 		  RaiseEvent SavePressed
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events DenoBtn
+	#tag Event
+		Sub Action()
+		  RaiseEvent DenoPressed
 		End Sub
 	#tag EndEvent
 #tag EndEvents

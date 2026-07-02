@@ -287,6 +287,50 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
+		Private Sub HandlerDenoCompleted(fileTemp As FolderItem, idx As Integer)
+		  If fileTemp Is Nil Then
+		    MsgBox "Download file error!"
+		    Return
+		  End If
+		  
+		  System.DebugLog CurrentMethodName
+		  
+		  Dim list As Listbox= HistoryPanel1.HistoryLbx
+		  list.Cell(idx, 0)= fileTemp.AbsoluteNativePath
+		  
+		  Try
+		    Dim files() As FolderItem= PKZip.ReadZip(fileTemp, SpecialFolder.Temporary, True)
+		    
+		    For i As Integer= 0 To files.Ubound
+		      Dim file As FolderItem= files(i)
+		      If file.Name.InStr("deno")= 0 Then Continue
+		      
+		      Dim sh As New Shell
+		      sh.Mode= 1
+		      AddHandler sh.Completed, WeakAddressOf HandlerDenoRunCompleted
+		      sh.Execute file.ShellPath
+		      
+		      list.CellTag(idx, 1)= sh
+		      
+		      mDenoStatus= 1
+		    Next
+		  Catch e As RuntimeException
+		    System.DebugLog CurrentMethodName+ " e.Message: "+ e.Message
+		  End Try
+		  
+		  ConfigPanel1.DenoBtn.Enabled= True
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub HandlerDenoRunCompleted(o As Shell)
+		  System.DebugLog CurrentMethodName+ " resultCode:"+ Str(o.ErrorCode)
+		  
+		  mDenoStatus= 2
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
 		Private Sub HandlerMergeCompleted(fileTemp As FolderItem, idx As Integer)
 		  HistoryPanel1.MergeBtn.Enabled= True
 		End Sub
@@ -310,6 +354,10 @@ End
 
 	#tag Property, Flags = &h21
 		Private mChkYoutubeDlFile As Boolean
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mDenoStatus As Integer
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
@@ -493,6 +541,63 @@ End
 		  Next
 		  
 		  If changed Then json.Save pref.File
+		End Sub
+	#tag EndEvent
+	#tag Event
+		Sub DenoPressed()
+		  // run deno --version
+		  Dim denoVersion As String
+		  
+		  Dim sh As New Shell
+		  sh.TimeOut= 5000
+		  sh.Execute "deno --version"
+		  denoVersion= sh.Result.Trim
+		  
+		  'If denoVersion.InStr("""deno""")= 0 Then
+		  'MsgBox denoVersion
+		  'Return
+		  'End If
+		  
+		  If mDenoStatus= 1 Then
+		    MsgBox "procesando, espere y vuelva intentar!"
+		    Return
+		  ElseIf mDenoStatus= 2 Then
+		    MsgBox "procesado!"
+		    Return
+		  End If
+		  
+		  Dim dlg As New MessageDialog
+		  dlg.Icon= MessageDialog.GraphicQuestion
+		  dlg.ActionButton.Caption= "¿Descargar e instalar?"
+		  dlg.CancelButton.Visible= True
+		  dlg.Message= "¿Descargar e instalar ""deno""?"
+		  dlg.Explanation= "Aparentemente no está instalado, necesita un runtime JS"+ _
+		  EndOfLine+ "como ""deno"" para bajar ciertos media..."+ EndOfLine
+		  
+		  Dim dlgBtn As MessageDialogButton= dlg.ShowModal
+		  
+		  If dlgBtn= dlg.CancelButton Then Return
+		  
+		  Dim pref As New VideoDl.Preferences
+		  Dim json As JSONData= pref.File.OpenAsJSONData
+		  Dim urlStr As String= json.Lookup(VideoDl.Preferences.kUrl_deno, "").StringValue
+		  If urlStr= "" Then
+		    MsgBox "no deno URL, trate borrar archivo preferences.json"
+		    Return
+		  End If
+		  
+		  Dim denoFile As VideoDl.IFile= New VideoDl.FileDownloader(urlStr)
+		  
+		  Dim list As Listbox= HistoryPanel1.HistoryLbx
+		  list.AddRow DownloadPanel.kLocInit
+		  list.RowTag(list.LastIndex)= denoFile
+		  denoFile.SetIndex= list.LastIndex
+		  
+		  denoFile.SetProgressAction WeakAddressOf HandlerProgress
+		  denoFile.SetCompletedAction WeakAddressOf HandlerDenoCompleted
+		  denoFile.Start
+		  
+		  Me.DenoBtn.Enabled= False
 		End Sub
 	#tag EndEvent
 #tag EndEvents

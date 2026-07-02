@@ -17,6 +17,7 @@ Protected Class Preferences
 		  
 		  json.Value(kUrl_youtube_dl)= kUrl_youtube_dl_value
 		  json.Value(kUrl_ffmpeg)= kUrl_ffmpeg_value
+		  json.Value(kUrl_deno)= kUrl_deno_value
 		  json.Value(kVideos_folder)= SpecialFolder.Movies.AbsoluteNativePath
 		  
 		  json.Save f
@@ -77,6 +78,12 @@ Protected Class Preferences
 		Private mPreferencesFile As FolderItem
 	#tag EndProperty
 
+
+	#tag Constant, Name = kUrl_deno, Type = String, Dynamic = False, Default = \"url_deno", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = kUrl_deno_value, Type = String, Dynamic = False, Default = \"https://github.com/denoland/deno/releases/download/v2.9.1/deno-aarch64-pc-windows-msvc.zip", Scope = Private
+	#tag EndConstant
 
 	#tag Constant, Name = kUrl_ffmpeg, Type = String, Dynamic = False, Default = \"url_ffmpeg", Scope = Public
 	#tag EndConstant
