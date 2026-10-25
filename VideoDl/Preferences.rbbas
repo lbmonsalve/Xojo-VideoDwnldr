@@ -19,6 +19,7 @@ Protected Class Preferences
 		  json.Value(kUrl_ffmpeg)= kUrl_ffmpeg_value
 		  json.Value(kUrl_deno)= kUrl_deno_value
 		  json.Value(kVideos_folder)= SpecialFolder.Movies.AbsoluteNativePath
+		  json.Value(kCookiesFromBrowser)= ""
 		  
 		  json.Save f
 		End Sub
@@ -78,6 +79,9 @@ Protected Class Preferences
 		Private mPreferencesFile As FolderItem
 	#tag EndProperty
 
+
+	#tag Constant, Name = kCookiesFromBrowser, Type = String, Dynamic = False, Default = \"cookies-from-browser", Scope = Public
+	#tag EndConstant
 
 	#tag Constant, Name = kUrl_deno, Type = String, Dynamic = False, Default = \"url_deno", Scope = Public
 	#tag EndConstant

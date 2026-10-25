@@ -72,6 +72,22 @@ Implements ISource
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		 Shared Function GetCookies() As String
+		  If mCookies= "no-set" Then
+		    Dim pref As New VideoDl.Preferences
+		    Dim json As JSONData= pref.File.OpenAsJSONData
+		    If json.HasName(VideoDl.Preferences.kCookiesFromBrowser) Then
+		      mCookies= " --cookies-from-browser "+ json.Value(VideoDl.Preferences.kCookiesFromBrowser).StringValue+ " "
+		    Else
+		      mCookies= ""
+		    End If
+		  End If
+		  
+		  Return mCookies
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function GetFileData() As JSONData
 		  Return mFileData
 		End Function
@@ -99,7 +115,9 @@ Implements ISource
 		    Return
 		  End If
 		  
-		  mCmd.Execute Executable.ShellPath+ " -F -j "+ mUrl
+		  Dim command As String= Executable.ShellPath+ " -F -j "+ GetCookies
+		  
+		  mCmd.Execute command+ mUrl
 		End Sub
 	#tag EndMethod
 
@@ -199,6 +217,10 @@ Implements ISource
 
 	#tag Property, Flags = &h21
 		Private mCmd As Shell
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private Shared mCookies As String = "no-set"
 	#tag EndProperty
 
 	#tag ComputedProperty, Flags = &h0

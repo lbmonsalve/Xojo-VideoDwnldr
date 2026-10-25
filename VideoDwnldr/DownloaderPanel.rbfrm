@@ -567,6 +567,11 @@ End
 		  Dim pref As New VideoDl.Preferences
 		  Dim json As JSONData= pref.File.OpenAsJSONData
 		  
+		  //chk
+		  If Not json.HasName(VideoDl.Preferences.kCookiesFromBrowser) Then
+		    json.Value(VideoDl.Preferences.kCookiesFromBrowser)= ""
+		  End If
+		  
 		  Dim names() As String= json.Names
 		  For Each name As String In names
 		    Me.PropsLbx.AddRow name, json.Value(name).StringValue
