@@ -596,6 +596,11 @@ End
 		      json.Value(name)= value
 		      changed= True
 		    End If
+		    
+		    If changed And name= VideoDl.Preferences.kCookiesFromBrowser Then
+		      VideoDl.Youtube.mCookies= "no-set"
+		    End If
+		    
 		  Next
 		  
 		  If changed Then json.Save pref.File

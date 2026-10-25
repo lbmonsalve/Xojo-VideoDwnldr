@@ -219,8 +219,8 @@ Implements ISource
 		Private mCmd As Shell
 	#tag EndProperty
 
-	#tag Property, Flags = &h21
-		Private Shared mCookies As String = "no-set"
+	#tag Property, Flags = &h0
+		Attributes( Hidden ) Shared mCookies As String = "no-set"
 	#tag EndProperty
 
 	#tag ComputedProperty, Flags = &h0

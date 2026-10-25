@@ -118,7 +118,8 @@ Implements IFile
 		    fmtOut= """"+ mf.ShellPath+ "\%(title)s-%(id)s.%(ext)s"""
 		  End If
 		  
-		  Dim cmdStr As String= yt.ShellPath+ " --verbose --encoding utf-8 -f {ID} --ffmpeg-location {LOC} -o {FMTOUT} {URL}"
+		  Dim cmdStr As String= yt.ShellPath+ Youtube.GetCookies+ _
+		  " --verbose --encoding utf-8 -f {ID} --ffmpeg-location {LOC} -o {FMTOUT} {URL}"
 		  cmdStr= cmdStr.Replace("{ID}", mId).Replace("{LOC}", ff.ShellPath).Replace("{FMTOUT}", fmtOut)
 		  cmdStr= cmdStr.Replace("{URL}", mUrl)
 		  System.DebugLog CurrentMethodName+ " cmdStr= "+ cmdStr
